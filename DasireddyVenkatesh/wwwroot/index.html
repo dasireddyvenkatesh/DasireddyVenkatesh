@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>DasireddyVenkatesh</title>
+
+    <base href="/" />
+    <link href="DasireddyVenkatesh.styles.css" rel="stylesheet" />
+    <!-- Application CSS -->
+    <link rel="stylesheet" href="css/app.css" />
+
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.webmanifest" />
+
+    <!-- Favicon -->
+    <link rel="icon"
+          type="image/png"
+          sizes="192x192"
+          href="D_icon_192x192.png" />
+
+    <link rel="icon"
+          type="image/png"
+          sizes="512x512"
+          href="D_icon_512x512.png" />
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+          rel="stylesheet" />
+
+    <!-- MudBlazor CSS -->
+    <link href="_content/MudBlazor/MudBlazor.min.css"
+          rel="stylesheet" />
+
+    <script type="importmap"></script>
+</head>
+
+<body>
+
+    <!-- Blazor Application -->
+    <div id="app">
+
+        <!-- Initial Loading Screen -->
+        <div class="modern-loader">
+
+            <div class="loader-card">
+
+                <img src="D_icon_192x192.png"
+                     class="loader-logo"
+                     alt="DasireddyVenkatesh" />
+
+                <div class="loader-spinner"></div>
+
+                <div class="loader-title">
+                    DasireddyVenkatesh
+                </div>
+
+                <div class="loader-subtitle">
+                    Loading application...
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- MudBlazor JavaScript -->
+    <script src="_content/MudBlazor/MudBlazor.min.js"></script>
+
+    <!-- Blazor WebAssembly -->
+    <script src="_framework/blazor.webassembly#[.{fingerprint}].js"></script>
+
+    <!-- Service Worker -->
+    <script>
+        navigator.serviceWorker.register(
+            'service-worker.js',
+            {
+                updateViaCache: 'none'
+            }
+        );
+    </script>
+
+</body>
+
+</html>

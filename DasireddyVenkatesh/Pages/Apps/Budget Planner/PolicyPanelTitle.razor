@@ -1,0 +1,35 @@
+﻿<MudStack Row="true"
+          AlignItems="AlignItems.Center"
+          Spacing="2">
+
+    <MudAvatar Size="Size.Small"
+               Color="Color.Primary"
+               Variant="Variant.Outlined">
+
+        <MudText Typo="Typo.caption">
+            @Number
+        </MudText>
+
+    </MudAvatar>
+
+    <MudIcon Icon="@Icon"
+             Color="Color.Primary" />
+
+    <MudText Typo="Typo.h6"
+             Class="panel-title">
+        @Title
+    </MudText>
+
+</MudStack>
+
+@code {
+
+    [Parameter]
+    public string Number { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Icon { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Title { get; set; } = string.Empty;
+}

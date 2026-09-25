@@ -1,0 +1,590 @@
+﻿.policy-page {
+    min-height: 100vh;
+    padding: 28px 0 60px;
+    background: #f4f7f8;
+    color: #263238;
+}
+
+.policy-container {
+    width: min(1230px, calc(100% - 32px));
+    margin: 0 auto;
+}
+
+/* Top bar */
+
+.policy-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 62px;
+    padding: 0 18px;
+    margin-bottom: 16px;
+    background: #ffffff;
+    border: 1px solid #dce4e7;
+    border-radius: 18px;
+    box-shadow: 0 4px 16px rgba(38, 50, 56, 0.06);
+}
+
+.policy-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.policy-brand-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: #00695c;
+    color: #ffffff;
+}
+
+.policy-brand-title {
+    color: #263238;
+    font-weight: 700;
+    letter-spacing: -0.2px;
+}
+
+::deep .policy-privacy-link {
+    min-width: 92px;
+    color: #263238 !important;
+    border-color: #90a4ae !important;
+}
+
+/* Hero */
+
+::deep .privacy-hero {
+    position: relative;
+    overflow: hidden;
+    min-height: 370px;
+    padding: 56px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: radial-gradient( circle at 50% 0%, rgba(0, 105, 92, 0.16), transparent 45% ), linear-gradient( 135deg, #e7f5f2 0%, #f8fbfb 52%, #eaf2f8 100% );
+    border: 1px solid #cfe2df;
+    border-radius: 28px;
+    box-shadow: 0 8px 30px rgba(38, 50, 56, 0.06) !important;
+}
+
+    ::deep .privacy-hero::after {
+        content: "";
+        position: absolute;
+        width: 280px;
+        height: 280px;
+        right: -130px;
+        bottom: -170px;
+        border-radius: 50%;
+        background: rgba(21, 101, 192, 0.08);
+    }
+
+::deep .privacy-hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 820px;
+}
+
+::deep .privacy-shield {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+    background: #00695c;
+    color: #ffffff;
+    box-shadow: 0 12px 30px rgba(0, 105, 92, 0.25);
+}
+
+    ::deep .privacy-shield .mud-icon-root {
+        color: #ffffff !important;
+    }
+
+::deep .privacy-eyebrow {
+    margin-bottom: 12px;
+    color: #00695c !important;
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+::deep .privacy-title {
+    margin: 0;
+    color: #263238 !important;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 800 !important;
+    line-height: 1.05;
+    letter-spacing: -2px;
+}
+
+::deep .privacy-subtitle {
+    margin-top: 14px;
+    color: #546e7a !important;
+    font-size: 1.05rem;
+}
+
+/* Hero chips */
+
+::deep .privacy-badges {
+    margin-top: 24px;
+    justify-content: center;
+}
+
+    ::deep .privacy-badges .mud-chip {
+        min-height: 34px;
+        border-radius: 18px;
+        font-weight: 600;
+    }
+
+::deep .privacy-chip {
+    background: #f1faf8 !important;
+    border-color: #80cbc4 !important;
+    color: #00695c !important;
+}
+
+::deep .privacy-chip-blue {
+    background: #f2f7fc !important;
+    border-color: #90caf9 !important;
+    color: #1565c0 !important;
+}
+
+::deep .privacy-chip-dark {
+    background: #f6f8f9 !important;
+    border-color: #b0bec5 !important;
+    color: #37474f !important;
+}
+
+::deep .privacy-badges .mud-chip .mud-icon-root {
+    color: inherit !important;
+}
+
+/* Statistics */
+
+.policy-stat-row {
+    margin-top: 18px;
+}
+
+::deep .privacy-stat {
+    height: 100%;
+    min-height: 108px;
+    padding: 20px;
+    border-radius: 18px !important;
+    box-shadow: none !important;
+}
+
+::deep .privacy-stat-device {
+    background: #e7f5f1 !important;
+    border: 1px solid #c2e3db !important;
+}
+
+::deep .privacy-stat-control {
+    background: #eaf2fb !important;
+    border: 1px solid #c9dced !important;
+}
+
+::deep .privacy-stat-security {
+    background: #edf1f3 !important;
+    border: 1px solid #d3dde1 !important;
+}
+
+::deep .privacy-stat-content {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+::deep .privacy-stat-icon {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+::deep .privacy-stat-device .privacy-stat-icon {
+    background: #00897b;
+    color: #ffffff;
+}
+
+::deep .privacy-stat-control .privacy-stat-icon {
+    background: #1565c0;
+    color: #ffffff;
+}
+
+::deep .privacy-stat-security .privacy-stat-icon {
+    background: #263238;
+    color: #ffffff;
+}
+
+::deep .privacy-stat-icon .mud-icon-root {
+    color: #ffffff !important;
+}
+
+::deep .privacy-stat-label {
+    color: #607d8b !important;
+    font-size: 0.72rem;
+    font-weight: 700 !important;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+::deep .privacy-stat-value {
+    margin-top: 4px;
+    color: #263238 !important;
+    font-size: 1.05rem;
+    font-weight: 700 !important;
+}
+
+/* Overview */
+
+.policy-overview-section {
+    margin-top: 18px;
+}
+
+::deep .privacy-overview {
+    padding: 30px 32px;
+    background: #ffffff !important;
+    border: 1px solid #dce4e7 !important;
+    border-radius: 22px !important;
+    box-shadow: 0 5px 20px rgba(38, 50, 56, 0.05) !important;
+}
+
+::deep .privacy-overview-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #263238 !important;
+    font-weight: 750 !important;
+}
+
+    ::deep .privacy-overview-title .mud-icon-root {
+        color: #00695c !important;
+    }
+
+::deep .privacy-overview-text {
+    color: #455a64 !important;
+    line-height: 1.75;
+}
+
+::deep .privacy-notice {
+    margin-top: 18px;
+    background: #e6f5f1 !important;
+    border: 1px solid #a7dcd2 !important;
+    color: #004d40 !important;
+    border-radius: 14px !important;
+    box-shadow: none !important;
+}
+
+    ::deep .privacy-notice .mud-alert-icon {
+        color: #00897b !important;
+    }
+
+/* Policy document */
+
+.policy-document-section {
+    margin-top: 18px;
+}
+
+::deep .privacy-policy {
+    overflow: hidden;
+    background: #ffffff !important;
+    border: 1px solid #dce4e7 !important;
+    border-radius: 22px !important;
+    box-shadow: 0 5px 20px rgba(38, 50, 56, 0.05) !important;
+}
+
+.privacy-policy-header {
+    padding: 24px 30px;
+    border-bottom: 1px solid #e1e7e9;
+}
+
+::deep .privacy-policy-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #263238 !important;
+    font-weight: 750 !important;
+}
+
+    ::deep .privacy-policy-title .mud-icon-root {
+        color: #00695c !important;
+    }
+
+::deep .policy-section-subtitle {
+    color: #78909c !important;
+    font-size: 0.88rem;
+}
+
+/* Expansion panels */
+
+::deep .privacy-panels {
+    background: transparent !important;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+    ::deep .privacy-panels .mud-expansion-panel {
+        background: #ffffff !important;
+        border-bottom: 1px solid #e5eaec;
+        box-shadow: none !important;
+    }
+
+        ::deep .privacy-panels .mud-expansion-panel:last-child {
+            border-bottom: 0;
+        }
+
+    ::deep .privacy-panels .mud-expansion-panel-header {
+        min-height: 70px;
+        padding: 14px 28px;
+        transition: background 160ms ease;
+    }
+
+        ::deep .privacy-panels .mud-expansion-panel-header:hover {
+            background: #f1f8f7 !important;
+        }
+
+    ::deep .privacy-panels .mud-expand-panel-text {
+        color: #263238 !important;
+        font-weight: 700 !important;
+    }
+
+    ::deep .privacy-panels .mud-expand-panel-icon {
+        color: #00695c !important;
+    }
+
+    ::deep .privacy-panels .mud-expansion-panel-content {
+        color: #455a64;
+    }
+
+::deep .privacy-panel-content {
+    padding: 4px 30px 28px;
+    color: #455a64 !important;
+    line-height: 1.75;
+}
+
+/* Panel headings */
+
+::deep .policy-section-heading {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #263238 !important;
+    font-weight: 700;
+}
+
+    ::deep .policy-section-heading .mud-icon-root {
+        color: #00695c !important;
+    }
+
+/* Lists */
+
+::deep .privacy-list {
+    padding: 0 !important;
+}
+
+    ::deep .privacy-list .mud-list-item {
+        min-height: 44px;
+        border-radius: 10px;
+        color: #455a64 !important;
+        transition: background 160ms ease;
+    }
+
+        ::deep .privacy-list .mud-list-item:hover {
+            background: #f1f7f6 !important;
+        }
+
+    ::deep .privacy-list .mud-list-item-icon {
+        color: #00897b !important;
+    }
+
+    ::deep .privacy-list .mud-icon-root {
+        color: #00897b !important;
+    }
+
+/* Alerts */
+
+::deep .privacy-panel-content .mud-alert {
+    margin: 16px 0;
+    border-radius: 14px;
+    box-shadow: none !important;
+}
+
+::deep .privacy-panel-content .mud-alert-icon {
+    color: inherit;
+}
+
+/* Security callout */
+
+::deep .privacy-security-callout {
+    padding: 22px;
+    margin-bottom: 18px;
+    background: #eef3f5;
+    border: 1px solid #d5dfe3;
+    border-radius: 16px;
+    color: #455a64;
+}
+
+    ::deep .privacy-security-callout .mud-icon-root {
+        color: #263238 !important;
+    }
+
+/* Lifecycle */
+
+::deep .privacy-lifecycle {
+    padding: 24px;
+    background: #f7faf9;
+    border: 1px solid #dce9e6;
+    border-radius: 18px;
+}
+
+::deep .privacy-lifecycle-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+}
+
+::deep .privacy-lifecycle-icon {
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #00695c;
+    color: #ffffff;
+}
+
+    ::deep .privacy-lifecycle-icon .mud-icon-root {
+        color: #ffffff !important;
+    }
+
+::deep .privacy-lifecycle-title {
+    color: #263238 !important;
+    font-weight: 700 !important;
+}
+
+::deep .privacy-lifecycle-text {
+    margin-top: 2px;
+    color: #607d8b !important;
+    font-size: 0.9rem;
+}
+
+/* Important information */
+
+::deep .privacy-important {
+    padding: 20px;
+    background: #fff8e1;
+    border: 1px solid #ffe082;
+    border-radius: 16px;
+    color: #5d4037;
+}
+
+    ::deep .privacy-important .mud-icon-root {
+        color: #f9a825 !important;
+    }
+
+/* Links */
+
+::deep .privacy-page .mud-link {
+    color: #00695c !important;
+    font-weight: 600;
+}
+
+    ::deep .privacy-page .mud-link:hover {
+        color: #004d40 !important;
+    }
+
+/* Buttons */
+
+::deep .privacy-page .mud-button-root {
+    border-radius: 10px;
+}
+
+::deep .privacy-page .mud-button-outlined {
+    border-color: #90a4ae;
+    color: #263238;
+}
+
+    ::deep .privacy-page .mud-button-outlined:hover {
+        background: #eef6f5;
+        border-color: #00695c;
+        color: #00695c;
+    }
+
+/* Icon buttons */
+
+::deep .privacy-page .mud-icon-button {
+    color: #00695c;
+}
+
+    ::deep .privacy-page .mud-icon-button:hover {
+        background: #e8f5f2;
+    }
+
+/* Divider */
+
+::deep .privacy-page .mud-divider {
+    border-color: #e1e7e9;
+}
+
+/* Avatar */
+
+::deep .privacy-page .mud-avatar {
+    background: #00695c;
+    color: #ffffff;
+}
+
+/* Tooltip */
+
+::deep .privacy-page .mud-tooltip {
+    background: #263238;
+    color: #ffffff;
+}
+
+/* Tabs */
+
+::deep .privacy-page .mud-tabs {
+    background: #ffffff;
+}
+
+::deep .privacy-page .mud-tab {
+    color: #607d8b;
+}
+
+::deep .privacy-page .mud-tab-active {
+    color: #00695c !important;
+}
+
+::deep .privacy-page .mud-tabs-toolbar {
+    border-bottom: 1px solid #e1e7e9;
+}
+
+::deep .privacy-page .mud-tab-slider {
+    background: #00695c;
+}
+
+/* Footer */
+
+.privacy-footer {
+    padding: 24px 0 0;
+    text-align: center;
+    color: #78909c;
+    font-size: 0.82rem;
+}
+
+.privacy-footer-divider {
+    margin-bottom: 20px;
+}
+
+::deep .privacy-footer .mud-divider {
+    border-color: #dce4e7;
+}
