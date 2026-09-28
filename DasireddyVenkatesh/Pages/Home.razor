@@ -1,7 +1,244 @@
-﻿@page "/"
+@page "/"
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Dasireddy Venkatesh — Software Developer</PageTitle>
 
-<h1>Hello, world!</h1>
+<HeadContent>
+    <meta name="description" content="Dasireddy Venkatesh builds thoughtful software with .NET, Blazor, and modern application design." />
+    <meta property="og:title" content="Dasireddy Venkatesh — Software Developer" />
+    <meta property="og:description" content="A developer portfolio focused on practical software, .NET, and modern application experiences." />
+    <meta property="og:type" content="website" />
+</HeadContent>
 
-Welcome to your new app.
+<div class="portfolio-home @(ThemeIsDark ? "home-dark" : "home-light")">
+    <header class="home-nav-wrap">
+        <nav class="home-nav" aria-label="Main navigation">
+            <a class="home-brand" href="#home" aria-label="Dasireddy Venkatesh home">
+                <span class="brand-mark">D<span>.</span></span>
+                <span class="brand-name">Dasireddy Venkatesh</span>
+            </a>
+
+            <MudHidden Breakpoint="Breakpoint.SmAndDown">
+                <nav class="nav-links" aria-label="Main navigation">
+                    <MudLink Href="#about" Underline="Underline.None">About</MudLink>
+                    <MudLink Href="#stack" Underline="Underline.None">Stack</MudLink>
+                    <MudLink Href="#work" Underline="Underline.None">Selected work</MudLink>
+                    <MudLink Href="#focus" Underline="Underline.None">Focus</MudLink>
+                </nav>
+            </MudHidden>
+
+            <div class="nav-actions">
+                <MudIconButton Class="theme-toggle"
+                               Icon="@(ThemeIsDark ? Icons.Material.Filled.LightMode : Icons.Material.Filled.DarkMode)"
+                               aria-label="Toggle color theme"
+                               OnClick="TogglePortfolioTheme" />
+                <MudHidden Breakpoint="Breakpoint.SmAndDown">
+                    <MudButton Class="nav-contact" Variant="Variant.Outlined" Href="#contact" EndIcon="@Icons.Material.Filled.ArrowOutward">
+                        Get in touch
+                    </MudButton>
+                </MudHidden>
+                <MudHidden Breakpoint="Breakpoint.MdAndUp">
+                    <MudIconButton Class="mobile-menu-toggle"
+                                   Icon="@(_mobileMenuOpen ? Icons.Material.Filled.Close : Icons.Material.Filled.Menu)"
+                                   aria-label="Toggle navigation menu"
+                                   OnClick="ToggleMobileMenu" />
+                </MudHidden>
+            </div>
+        </nav>
+        <MudHidden Breakpoint="Breakpoint.MdAndUp">
+            @if (_mobileMenuOpen)
+            {
+                <nav class="mobile-nav" aria-label="Mobile navigation">
+                    <MudLink Href="#about" Underline="Underline.None" OnClick="CloseMobileMenu">About</MudLink>
+                    <MudLink Href="#stack" Underline="Underline.None" OnClick="CloseMobileMenu">Stack</MudLink>
+                    <MudLink Href="#work" Underline="Underline.None" OnClick="CloseMobileMenu">Selected work</MudLink>
+                    <MudLink Href="#focus" Underline="Underline.None" OnClick="CloseMobileMenu">Focus</MudLink>
+                    <MudLink Href="#contact" Underline="Underline.None" OnClick="CloseMobileMenu">Get in touch</MudLink>
+                </nav>
+            }
+        </MudHidden>
+    </header>
+
+    <main id="home">
+        <section class="hero section-shell" aria-labelledby="hero-title">
+            <MudGrid Class="hero-grid" Spacing="4">
+            <MudItem xs="12" md="7">
+            <div class="hero-copy">
+                <div class="hero-kicker"><span class="status-dot"></span> SOFTWARE DEVELOPER <span class="kicker-separator">/</span> .NET · BLAZOR</div>
+                <h1 id="hero-title">Thoughtful software.<br /><span>Built for what’s next.</span></h1>
+                <p class="hero-lede">I’m Dasireddy Venkatesh. I build practical applications with a focus on .NET, clear architecture, and experiences that feel considered from the first click.</p>
+                <div class="hero-actions">
+                    <MudButton Class="button-primary" Variant="Variant.Filled" Href="#work" EndIcon="@Icons.Material.Filled.ArrowDownward">Explore my work</MudButton>
+                    <MudButton Class="button-secondary" Variant="Variant.Text" Href="#contact" EndIcon="@Icons.Material.Filled.ArrowOutward">Let’s connect</MudButton>
+                </div>
+                <div class="hero-footnote"><span class="footnote-line"></span> Independent developer · Building with care</div>
+            </div>
+            </MudItem>
+
+            <MudItem xs="12" md="5">
+            <div class="hero-visual" aria-label="Illustration of a connected software system" role="img">
+                <div class="visual-grid"></div>
+                <svg class="system-lines" viewBox="0 0 560 480" aria-hidden="true">
+                    <path d="M280 240 L130 105 M280 240 L430 105 M280 240 L100 260 M280 240 L460 260 M280 240 L150 385 M280 240 L410 385" />
+                    <circle cx="130" cy="105" r="4" /><circle cx="430" cy="105" r="4" />
+                    <circle cx="100" cy="260" r="4" /><circle cx="460" cy="260" r="4" />
+                    <circle cx="150" cy="385" r="4" /><circle cx="410" cy="385" r="4" />
+                </svg>
+                <MudPaper Class="system-core" Elevation="0">
+                    <span class="core-orbit orbit-one"></span><span class="core-orbit orbit-two"></span>
+                    <MudText Class="system-core-mark" Typo="Typo.h3">D<span>.</span></MudText>
+                    <MudText Class="system-core-caption" Typo="Typo.overline">ENGINEERING</MudText>
+                </MudPaper>
+                <MudPaper Class="system-node node-dotnet" Elevation="0"><MudIcon Class="node-glyph" Icon="@Icons.Material.Filled.Code" /><div class="system-node-copy"><MudText Class="system-node-title" Typo="Typo.subtitle2">.NET</MudText><MudText Class="system-node-caption" Typo="Typo.overline">APPLICATIONS</MudText></div></MudPaper>
+                <MudPaper Class="system-node node-api" Elevation="0"><MudIcon Class="node-glyph" Icon="@Icons.Material.Filled.Api" /><div class="system-node-copy"><MudText Class="system-node-title" Typo="Typo.subtitle2">APIs</MudText><MudText Class="system-node-caption" Typo="Typo.overline">INTEGRATION</MudText></div></MudPaper>
+                <MudPaper Class="system-node node-data" Elevation="0"><MudIcon Class="node-glyph" Icon="@Icons.Material.Filled.Storage" /><div class="system-node-copy"><MudText Class="system-node-title" Typo="Typo.subtitle2">DATA</MudText><MudText Class="system-node-caption" Typo="Typo.overline">STORAGE</MudText></div></MudPaper>
+                <MudPaper Class="system-node node-web" Elevation="0"><MudIcon Class="node-glyph" Icon="@Icons.Material.Filled.Web" /><div class="system-node-copy"><MudText Class="system-node-title" Typo="Typo.subtitle2">WEB</MudText><MudText Class="system-node-caption" Typo="Typo.overline">EXPERIENCES</MudText></div></MudPaper>
+                <MudPaper Class="system-node node-cloud" Elevation="0"><MudIcon Class="node-glyph" Icon="@Icons.Material.Filled.Cloud" /><div class="system-node-copy"><MudText Class="system-node-title" Typo="Typo.subtitle2">CLOUD</MudText><MudText Class="system-node-caption" Typo="Typo.overline">EXPLORATION</MudText></div></MudPaper>
+                <MudPaper Class="system-node node-ai" Elevation="0"><MudIcon Class="node-glyph" Icon="@Icons.Material.Filled.AutoAwesome" /><div class="system-node-copy"><MudText Class="system-node-title" Typo="Typo.subtitle2">AI</MudText><MudText Class="system-node-caption" Typo="Typo.overline">EXPLORATION</MudText></div></MudPaper>
+                <div class="visual-caption"><span class="caption-pulse"></span> SYSTEMS THINKING <span>·</span> PRODUCT BUILDING</div>
+            </div>
+            </MudItem>
+            </MudGrid>
+        </section>
+
+        <section class="signal-strip section-shell" aria-label="Areas of practice">
+            <MudGrid Class="signal-grid" Spacing="2">
+                <MudItem xs="12" sm="2"><MudText Class="signal-label" Typo="Typo.overline">WORKING ACROSS</MudText></MudItem>
+                <MudItem xs="12" sm="8">
+                    <MudChipSet T="string" Class="signal-items" ReadOnly="true">
+                        <MudChip T="string" Class="practice-chip" Size="Size.Small" Variant="Variant.Outlined">.NET &amp; C#</MudChip>
+                        <MudChip T="string" Class="practice-chip" Size="Size.Small" Variant="Variant.Outlined">Web applications</MudChip>
+                        <MudChip T="string" Class="practice-chip" Size="Size.Small" Variant="Variant.Outlined">APIs</MudChip>
+                        <MudChip T="string" Class="practice-chip" Size="Size.Small" Variant="Variant.Outlined">Android</MudChip>
+                        <MudChip T="string" Class="practice-chip" Size="Size.Small" Variant="Variant.Outlined">Product thinking</MudChip>
+                    </MudChipSet>
+                </MudItem>
+                <MudItem xs="12" sm="2"><MudText Class="signal-index" Typo="Typo.overline">01 — 05</MudText></MudItem>
+            </MudGrid>
+        </section>
+
+        <section class="content-section section-shell about-section" id="about">
+            <div class="section-heading"><span class="section-index">01</span><span class="section-label">A LITTLE ABOUT ME</span></div>
+            <MudGrid Class="about-grid" Spacing="6">
+                <MudItem xs="12" md="6"><h2>Engineering is how<br />I make ideas <em>useful.</em></h2></MudItem>
+                <MudItem xs="12" md="6"><div class="about-copy">
+                    <p>I’m a software developer interested in the details that make an application dependable: a clear domain model, useful APIs, thoughtful interfaces, and data handled with care.</p>
+                    <p>My current work includes a personal budgeting application built with .NET and Blazor. I enjoy bringing the backend and interface together, then refining the small interactions that make a product easier to use.</p>
+                    <div class="explore-line"><span>EXPLORING</span><div class="explore-tags"><span>Cloud architecture</span><span>Applied AI</span><span>Mobile experiences</span></div></div>
+                </div></MudItem>
+            </MudGrid>
+        </section>
+
+        <section class="principles-section">
+            <div class="section-shell principles-inner">
+                <div class="section-heading"><span class="section-index">02</span><span class="section-label">HOW I APPROACH THE WORK</span></div>
+                <MudGrid Class="principles-heading" Spacing="4">
+                    <MudItem xs="12" md="7"><MudText Class="principles-title" HtmlTag="h2" Typo="Typo.h2">Good engineering<br />is felt, not announced.</MudText></MudItem>
+                    <MudItem xs="12" md="5"><MudText Class="principles-intro" Typo="Typo.body1">Quietly reliable systems. Clear decisions. Interfaces that get out of the way.</MudText></MudItem>
+                </MudGrid>
+                <MudStack Class="principle-list" Spacing="0">
+                    <MudPaper Class="principle-entry" Elevation="0"><MudText Class="principle-number" Typo="Typo.overline">01</MudText><div class="principle-copy"><MudText HtmlTag="h3" Typo="Typo.h6">Make complexity legible</MudText><MudText Typo="Typo.body2">Choose clear boundaries and names so the next decision is easier.</MudText></div><MudIcon Icon="@Icons.Material.Outlined.AccountTree" /></MudPaper>
+                    <MudPaper Class="principle-entry" Elevation="0"><MudText Class="principle-number" Typo="Typo.overline">02</MudText><div class="principle-copy"><MudText HtmlTag="h3" Typo="Typo.h6">Keep the user in view</MudText><MudText Typo="Typo.body2">Every technical choice should support a real task or reduce friction.</MudText></div><MudIcon Icon="@Icons.Material.Outlined.CenterFocusStrong" /></MudPaper>
+                    <MudPaper Class="principle-entry" Elevation="0"><MudText Class="principle-number" Typo="Typo.overline">03</MudText><div class="principle-copy"><MudText HtmlTag="h3" Typo="Typo.h6">Build for change</MudText><MudText Typo="Typo.body2">Favor maintainable foundations that can evolve with the product.</MudText></div><MudIcon Icon="@Icons.Material.Outlined.SwapHoriz" /></MudPaper>
+                    <MudPaper Class="principle-entry" Elevation="0"><MudText Class="principle-number" Typo="Typo.overline">04</MudText><div class="principle-copy"><MudText HtmlTag="h3" Typo="Typo.h6">Stay curious</MudText><MudText Typo="Typo.body2">Learn new tools with intention and apply them where they solve a problem.</MudText></div><MudIcon Icon="@Icons.Material.Outlined.Explore" /></MudPaper>
+                </MudStack>
+            </div>
+        </section>
+
+        <section class="content-section section-shell stack-section" id="stack">
+            <div class="section-heading"><span class="section-index">03</span><span class="section-label">TOOLS &amp; TECHNOLOGY</span></div>
+            <div class="stack-heading"><h2>A practical toolkit,<br /><em>growing with the work.</em></h2><p>Grouped by the kind of problem each tool helps solve. Exploratory topics are labeled separately from tools used in current work.</p></div>
+            <MudGrid Class="stack-groups" Spacing="0">
+                <MudItem xs="12" md="6"><MudPaper Class="stack-group" Elevation="0"><div class="stack-group-head"><span>01</span><h3>Application development</h3></div><p>Building user-facing applications and the services behind them.</p><MudChipSet T="string" Class="stack-tags" ReadOnly="true"><MudChip Class="tech-chip" Variant="Variant.Outlined" Size="Size.Small">.NET</MudChip><MudChip Class="tech-chip" Variant="Variant.Outlined" Size="Size.Small">C#</MudChip><MudChip Class="tech-chip" Variant="Variant.Outlined" Size="Size.Small">Blazor</MudChip><MudChip Class="tech-chip" Variant="Variant.Outlined" Size="Size.Small">Razor</MudChip><MudChip Class="tech-chip" Variant="Variant.Outlined" Size="Size.Small">MudBlazor</MudChip></MudChipSet></MudPaper></MudItem>
+                <MudItem xs="12" md="6"><MudPaper Class="stack-group" Elevation="0"><div class="stack-group-head"><span>02</span><h3>Data &amp; persistence</h3></div><p>Working with structured application data and local storage.</p><MudChipSet T="string" Class="stack-tags" ReadOnly="true"><MudChip Class="tech-chip" Variant="Variant.Outlined" Size="Size.Small">SQLite</MudChip><MudChip Class="tech-chip" Variant="Variant.Outlined" Size="Size.Small">Relational data</MudChip></MudChipSet></MudPaper></MudItem>
+                <MudItem xs="12" md="6"><MudPaper Class="stack-group" Elevation="0"><div class="stack-group-head"><span>03</span><h3>Interface &amp; delivery</h3></div><p>Responsive layouts, accessible patterns, and platform-aware design.</p><MudChipSet T="string" Class="stack-tags" ReadOnly="true"><MudChip Class="tech-chip" Variant="Variant.Outlined" Size="Size.Small">HTML</MudChip><MudChip Class="tech-chip" Variant="Variant.Outlined" Size="Size.Small">CSS</MudChip><MudChip Class="tech-chip" Variant="Variant.Outlined" Size="Size.Small">Android</MudChip></MudChipSet></MudPaper></MudItem>
+                <MudItem xs="12" md="6"><MudPaper Class="stack-group stack-group-explore" Elevation="0"><div class="stack-group-head"><span>04</span><h3>Areas I’m exploring</h3></div><p>Topics I’m interested in developing further.</p><MudChipSet T="string" Class="stack-tags" ReadOnly="true"><MudChip Class="tech-chip" Variant="Variant.Outlined" Size="Size.Small">Cloud architecture</MudChip><MudChip Class="tech-chip" Variant="Variant.Outlined" Size="Size.Small">AI integrations</MudChip><MudChip Class="tech-chip" Variant="Variant.Outlined" Size="Size.Small">LLM applications</MudChip></MudChipSet></MudPaper></MudItem>
+            </MudGrid>
+        </section>
+
+        <section class="work-section" id="work">
+            <div class="section-shell work-inner">
+                <div class="section-heading"><span class="section-index">04</span><span class="section-label">SELECTED WORK</span></div>
+                <div class="work-heading"><h2>Useful software,<br /><em>built with intention.</em></h2><span class="work-count">01 / PROJECT</span></div>
+                <article class="project-feature">
+                    <MudPaper Class="project-preview" Elevation="0" role="img" aria-label="Budget Planner product preview showing local-first expense tracking features">
+                        <MudStack Class="preview-top" Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                            <MudAvatar Class="preview-mark" Color="Color.Primary" Size="Size.Medium">D.</MudAvatar>
+                            <MudText Class="preview-brand" Typo="Typo.subtitle2">BUDGET PLANNER <span>/ ANDROID</span></MudText>
+                            <MudChip T="string" Class="preview-chip" Variant="Variant.Outlined" Size="Size.Small" Icon="@Icons.Material.Filled.Storage">LOCAL-FIRST</MudChip>
+                        </MudStack>
+
+                        <div class="preview-intro">
+                            <MudText Class="preview-eyebrow" Typo="Typo.overline">PERSONAL FINANCE, WITHOUT THE NOISE</MudText>
+                            <MudText Class="preview-title" Typo="Typo.h4">A clearer view<br />of everyday spending.</MudText>
+                            <MudText Class="preview-description" Typo="Typo.body2">Transactions, categories, and budgets—organized on your device.</MudText>
+                        </div>
+
+                        <MudGrid Class="preview-features" Spacing="2">
+                            <MudItem xs="12" sm="4">
+                                <MudPaper Class="preview-feature" Elevation="0">
+                                    <MudIcon Icon="@Icons.Material.Filled.ReceiptLong" />
+                                    <MudText Class="preview-feature-title" Typo="Typo.subtitle2">Transactions</MudText>
+                                    <MudText Class="preview-feature-caption" Typo="Typo.caption">Record and organize</MudText>
+                                </MudPaper>
+                            </MudItem>
+                            <MudItem xs="12" sm="4">
+                                <MudPaper Class="preview-feature" Elevation="0">
+                                    <MudIcon Icon="@Icons.Material.Filled.Category" />
+                                    <MudText Class="preview-feature-title" Typo="Typo.subtitle2">Categories</MudText>
+                                    <MudText Class="preview-feature-caption" Typo="Typo.caption">Make spending legible</MudText>
+                                </MudPaper>
+                            </MudItem>
+                            <MudItem xs="12" sm="4">
+                                <MudPaper Class="preview-feature" Elevation="0">
+                                    <MudIcon Icon="@Icons.Material.Filled.AccountBalanceWallet" />
+                                    <MudText Class="preview-feature-title" Typo="Typo.subtitle2">Budgets</MudText>
+                                    <MudText Class="preview-feature-caption" Typo="Typo.caption">Keep goals in view</MudText>
+                                </MudPaper>
+                            </MudItem>
+                        </MudGrid>
+
+                        <MudAlert Class="preview-privacy" Severity="Severity.Success" Variant="Variant.Outlined" Icon="@Icons.Material.Filled.Lock">
+                            Your budgeting data stays in the app’s private Android storage.
+                        </MudAlert>
+                    </MudPaper>
+                    <MudPaper Class="project-copy" Elevation="0">
+                        <div class="project-meta"><span>PERSONAL PROJECT</span><span>01 — 01</span></div>
+                        <h3>Budget Planner</h3>
+                        <p>A personal budgeting and expense-tracking application designed around local-first data and a clear view of everyday spending.</p>
+                        <div class="project-details"><div><span>FOCUS</span><b>Budgeting · Privacy · Usability</b></div><div><span>BUILT WITH</span><b>.NET · Blazor · MudBlazor · SQLite</b></div></div>
+                        <a class="text-link" href="/apps/budget-planner/privacy-policy">Explore the privacy approach <MudIcon Icon="@Icons.Material.Filled.ArrowOutward" /></a>
+                    </MudPaper>
+                </article>
+                <p class="project-note">More work will appear here as projects and case studies are ready to share.</p>
+            </div>
+        </section>
+
+        <section class="focus-section section-shell" id="focus">
+            <div class="section-heading"><span class="section-index">05</span><span class="section-label">WHAT I’M LOOKING TOWARD</span></div>
+            <MudGrid Class="focus-grid" Spacing="6"><MudItem xs="12" md="6"><h2>Traditional engineering.<br /><em>New possibilities.</em></h2></MudItem><MudItem xs="12" md="6"><div><p>I’m interested in how solid application architecture can work alongside cloud platforms and AI capabilities to solve concrete problems.</p><div class="focus-flow"><span>APPLICATION</span><b>→</b><span>API</span><b>→</b><span>INTELLIGENCE</span><b>→</b><span>USEFUL OUTCOME</span></div></div></MudItem></MudGrid>
+        </section>
+
+        <section class="contact-section section-shell" id="contact">
+            <div class="contact-orbit orbit-a"></div><div class="contact-orbit orbit-b"></div>
+            <div class="section-heading"><span class="section-index">06</span><span class="section-label">START A CONVERSATION</span></div>
+            <div class="contact-content"><div><h2>Have a thoughtful<br />problem to solve?</h2><p>I’m always glad to talk about software, product ideas, and what we can build next.</p></div><a class="contact-email" href="mailto:dasireddyvenkatesh@gmail.com">dasireddyvenkatesh@gmail.com <MudIcon Icon="@Icons.Material.Filled.ArrowOutward" /></a></div>
+        </section>
+    </main>
+
+    <footer class="home-footer section-shell"><a class="footer-brand" href="#home">D<span>.</span></a><span>© @DateTime.Now.Year Dasireddy Venkatesh</span><a href="/apps/budget-planner/privacy-policy">Budget Planner privacy policy <MudIcon Icon="@Icons.Material.Filled.ArrowOutward" /></a></footer>
+</div>
+
+@code {
+    [CascadingParameter(Name = "ThemeIsDark")]
+    public bool ThemeIsDark { get; set; } = true;
+
+    [CascadingParameter(Name = "ToggleTheme")]
+    public Func<Task>? ToggleTheme { get; set; }
+
+    private bool _mobileMenuOpen;
+
+    private Task TogglePortfolioTheme() => ToggleTheme?.Invoke() ?? Task.CompletedTask;
+
+    private void ToggleMobileMenu() => _mobileMenuOpen = !_mobileMenuOpen;
+    private void CloseMobileMenu() => _mobileMenuOpen = false;
+}

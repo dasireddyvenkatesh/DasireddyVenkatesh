@@ -1,8 +1,84 @@
-﻿@inherits LayoutComponentBase
+@inherits LayoutComponentBase
+@inject IJSRuntime JS
 
-<MudThemeProvider />
+<MudThemeProvider Theme="@PortfolioTheme.Theme"
+                  IsDarkMode="@_isDarkMode"
+                  ObserveSystemDarkModeChange="false"
+                  IsDarkModeChanged="@OnDarkModeChanged" />
+
 <MudPopoverProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
-@Body
+<MudLayout>
+    <CascadingValue Name="ThemeIsDark" Value="_isDarkMode">
+        <CascadingValue Name="ToggleTheme" Value="ToggleTheme">
+            <MudMainContent Class="portfolio-main">
+                @Body
+            </MudMainContent>
+        </CascadingValue>
+    </CascadingValue>
+</MudLayout>
+
+@code {
+    private bool _isDarkMode = true;
+    private bool _themeLoaded;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var savedTheme = await JS.InvokeAsync<string>("localStorage.getItem", "portfolio-theme");
+            if (savedTheme is "light" or "dark")
+                _isDarkMode = savedTheme == "dark";
+        }
+        catch (JSException)
+        {
+            // Keep the dark default when browser storage is unavailable.
+        }
+
+        _themeLoaded = true;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+            return;
+
+        try
+        {
+            await JS.InvokeVoidAsync("finishPortfolioStartup");
+        }
+        catch (JSException)
+        {
+            // Keep the rendered page usable if the startup overlay hook is unavailable.
+        }
+    }
+
+    private async Task ToggleTheme()
+    {
+        _isDarkMode = !_isDarkMode;
+        await InvokeAsync(StateHasChanged);
+        await SaveThemeAsync();
+    }
+
+    private async Task OnDarkModeChanged(bool value)
+    {
+        _isDarkMode = value;
+        await InvokeAsync(StateHasChanged);
+        if (_themeLoaded)
+            await SaveThemeAsync();
+    }
+
+    private async Task SaveThemeAsync()
+    {
+        try
+        {
+            await JS.InvokeVoidAsync("localStorage.setItem", "portfolio-theme", _isDarkMode ? "dark" : "light");
+        }
+        catch (JSException)
+        {
+            // Theme changes remain available for the current session.
+        }
+    }
+}

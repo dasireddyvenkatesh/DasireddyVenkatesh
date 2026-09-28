@@ -1,30 +1,39 @@
-﻿@page "/apps/budget-planner/privacy-policy"
+@page "/apps/budget-planner/privacy-policy"
 
 <PageTitle>Privacy Policy - Budget Planner</PageTitle>
 
 <div class="policy-page">
-    <div class="policy-container">
+    <MudContainer MaxWidth="MaxWidth.Large" Class="policy-container">
 
-        <div class="policy-topbar">
+        <header class="policy-topbar">
             <div class="policy-brand">
                 <div class="policy-brand-icon">
                     <MudIcon Icon="@Icons.Material.Filled.AccountBalanceWallet" />
                 </div>
 
-                <MudText Class="policy-brand-title" Typo="Typo.h6">
-                    Budget Planner
-                </MudText>
+                <div>
+                    <MudText Class="policy-brand-title" Typo="Typo.subtitle1">Budget Planner</MudText>
+                    <MudText Class="policy-brand-caption" Typo="Typo.caption">Privacy center</MudText>
+                </div>
             </div>
 
-            <MudButton
-                Class="policy-privacy-link"
-                Variant="Variant.Outlined"
-                Size="Size.Small"
-                StartIcon="@Icons.Material.Filled.Security">
-                Privacy
-            </MudButton>
-        </div>
+            <div class="policy-topbar-actions">
+                <MudIconButton Class="policy-theme-toggle"
+                               Icon="@(ThemeIsDark ? Icons.Material.Filled.LightMode : Icons.Material.Filled.DarkMode)"
+                               aria-label="Toggle color theme"
+                               OnClick="TogglePortfolioTheme" />
+                <MudButton
+                    Class="policy-privacy-link"
+                    Variant="Variant.Outlined"
+                    Size="Size.Small"
+                    StartIcon="@Icons.Material.Filled.ArrowBack"
+                    Href="/">
+                    Home
+                </MudButton>
+            </div>
+        </header>
 
+        <main class="policy-main">
         <MudPaper Class="privacy-hero" Elevation="0">
             <div class="privacy-hero-content">
 
@@ -34,17 +43,13 @@
                         Size="Size.Large" />
                 </div>
 
-                <MudText Class="privacy-eyebrow">
-                    Budget Planner Privacy Center
-                </MudText>
+                <MudText Class="privacy-eyebrow">BUDGET PLANNER · PRIVACY CENTER</MudText>
 
-                <MudText Class="privacy-title">
+                <MudText Class="privacy-title" Typo="Typo.h1">
                     Privacy &amp; Security
                 </MudText>
 
-                <MudText Class="privacy-subtitle">
-                    Your financial information stays under your control.
-                </MudText>
+                <MudText Class="privacy-subtitle">A plain-language guide to the information this app handles and the choices you have.</MudText>
 
                 <MudChipSet T="string" Class="privacy-badges">
 
@@ -73,7 +78,7 @@
                         Class="privacy-chip-dark"
                         Variant="Variant.Outlined"
                         Icon="@Icons.Material.Filled.CalendarToday">
-                        September 25, 2026
+                        Effective September 25, 2026
                     </MudChip>
 
                 </MudChipSet>
@@ -210,43 +215,73 @@
 
         <div class="policy-document-section">
 
+            <MudGrid Class="policy-document-layout" Spacing="3">
+
+                <MudItem xs="12" md="3">
+                <aside class="policy-toc">
+                    <MudText Class="policy-toc-title" Typo="Typo.overline">ON THIS PAGE</MudText>
+                    <nav aria-label="Privacy policy sections">
+                        <MudLink Href="#policy-introduction" Underline="Underline.None"><span>01</span>Introduction</MudLink>
+                        <MudLink Href="#policy-information" Underline="Underline.None"><span>02</span>Information collected</MudLink>
+                        <MudLink Href="#policy-storage" Underline="Underline.None"><span>03</span>Data storage</MudLink>
+                        <MudLink Href="#policy-use" Underline="Underline.None"><span>04</span>How data is used</MudLink>
+                        <MudLink Href="#policy-sharing" Underline="Underline.None"><span>05</span>Sharing</MudLink>
+                        <MudLink Href="#policy-backups" Underline="Underline.None"><span>06</span>Backups and exports</MudLink>
+                        <MudLink Href="#policy-security" Underline="Underline.None"><span>07</span>Security</MudLink>
+                        <MudLink Href="#policy-retention" Underline="Underline.None"><span>08</span>Retention and deletion</MudLink>
+                        <MudLink Href="#policy-children" Underline="Underline.None"><span>09</span>Children's privacy</MudLink>
+                        <MudLink Href="#policy-services" Underline="Underline.None"><span>10</span>Third-party services</MudLink>
+                        <MudLink Href="#policy-permissions" Underline="Underline.None"><span>11</span>Permissions</MudLink>
+                        <MudLink Href="#policy-changes" Underline="Underline.None"><span>12</span>Policy changes</MudLink>
+                        <MudLink Href="#policy-contact" Underline="Underline.None"><span>13</span>Contact</MudLink>
+                    </nav>
+                </aside>
+                </MudItem>
+
+                <MudItem xs="12" md="9">
             <MudPaper
                 Class="privacy-policy"
                 Elevation="0">
 
                 <div class="privacy-policy-header">
 
-                    <MudText
-                        Class="privacy-policy-title"
-                        Typo="Typo.h5">
+                    <div class="privacy-policy-heading">
+                        <div>
+                            <MudText
+                                Class="privacy-policy-title"
+                                Typo="Typo.h5">
 
-                        <MudIcon Icon="@Icons.Material.Filled.Description" />
+                                <MudIcon Icon="@Icons.Material.Filled.Description" />
 
-                        Privacy Policy
-                    </MudText>
+                                Privacy Policy
+                            </MudText>
 
-                    <MudText Class="policy-section-subtitle">
-                        Effective date: September 25, 2026
-                    </MudText>
+                            <MudText Class="policy-section-subtitle">
+                                Effective date: September 25, 2026
+                            </MudText>
+                        </div>
 
+                        <MudChip T="string"
+                                 Class="policy-section-count"
+                                 Variant="Variant.Outlined"
+                                 Icon="@Icons.Material.Filled.FormatListBulleted">
+                            13 sections
+                        </MudChip>
+                    </div>
                 </div>
 
-                <MudExpansionPanels
-                    Class="privacy-panels"
-                    MultiExpansion="true"
-                    Gutters="false"
-                    Elevation="0">
+                <div class="policy-sections">
 
-                    <MudExpansionPanel Expanded="true">
+                    <section class="policy-section">
 
-                        <TitleContent>
-                            <div class="policy-section-heading">
+
+                            <h2 class="policy-section-heading">
                                 <MudIcon Icon="@Icons.Material.Filled.Info" />
-                                <span>1. Introduction</span>
-                            </div>
-                        </TitleContent>
+                                <span id="policy-introduction">1. Introduction</span>
+                            </h2>
 
-                        <ChildContent>
+
+
                             <div class="privacy-panel-content">
 
                                 <MudText Typo="Typo.body1">
@@ -271,20 +306,20 @@
                                 </MudText>
 
                             </div>
-                        </ChildContent>
 
-                    </MudExpansionPanel>
 
-                    <MudExpansionPanel>
+                    </section>
 
-                        <TitleContent>
-                            <div class="policy-section-heading">
+                    <section class="policy-section">
+
+
+                            <h2 class="policy-section-heading">
                                 <MudIcon Icon="@Icons.Material.Filled.Person" />
-                                <span>2. Information We Collect</span>
-                            </div>
-                        </TitleContent>
+                                <span id="policy-information">2. Information We Collect</span>
+                            </h2>
 
-                        <ChildContent>
+
+
                             <div class="privacy-panel-content">
 
                                 <MudText Typo="Typo.body1">
@@ -344,20 +379,20 @@
                                 </MudList>
 
                             </div>
-                        </ChildContent>
 
-                    </MudExpansionPanel>
 
-                    <MudExpansionPanel>
+                    </section>
 
-                        <TitleContent>
-                            <div class="policy-section-heading">
+                    <section class="policy-section">
+
+
+                            <h2 class="policy-section-heading">
                                 <MudIcon Icon="@Icons.Material.Filled.Storage" />
-                                <span>3. How Your Data Is Stored</span>
-                            </div>
-                        </TitleContent>
+                                <span id="policy-storage">3. How Your Data Is Stored</span>
+                            </h2>
 
-                        <ChildContent>
+
+
                             <div class="privacy-panel-content">
 
                                 <MudAlert
@@ -390,20 +425,20 @@
                                 </MudText>
 
                             </div>
-                        </ChildContent>
 
-                    </MudExpansionPanel>
 
-                    <MudExpansionPanel>
+                    </section>
 
-                        <TitleContent>
-                            <div class="policy-section-heading">
+                    <section class="policy-section">
+
+
+                            <h2 class="policy-section-heading">
                                 <MudIcon Icon="@Icons.Material.Filled.Functions" />
-                                <span>4. How Your Information Is Used</span>
-                            </div>
-                        </TitleContent>
+                                <span id="policy-use">4. How Your Information Is Used</span>
+                            </h2>
 
-                        <ChildContent>
+
+
                             <div class="privacy-panel-content">
 
                                 <MudText Typo="Typo.body1">
@@ -447,20 +482,20 @@
                                 </MudList>
 
                             </div>
-                        </ChildContent>
 
-                    </MudExpansionPanel>
 
-                    <MudExpansionPanel>
+                    </section>
 
-                        <TitleContent>
-                            <div class="policy-section-heading">
+                    <section class="policy-section">
+
+
+                            <h2 class="policy-section-heading">
                                 <MudIcon Icon="@Icons.Material.Filled.Share" />
-                                <span>5. Sharing and Disclosure</span>
-                            </div>
-                        </TitleContent>
+                                <span id="policy-sharing">5. Sharing and Disclosure</span>
+                            </h2>
 
-                        <ChildContent>
+
+
                             <div class="privacy-panel-content">
 
                                 <MudAlert
@@ -490,20 +525,20 @@
                                 </MudText>
 
                             </div>
-                        </ChildContent>
 
-                    </MudExpansionPanel>
 
-                    <MudExpansionPanel>
+                    </section>
 
-                        <TitleContent>
-                            <div class="policy-section-heading">
+                    <section class="policy-section">
+
+
+                            <h2 class="policy-section-heading">
                                 <MudIcon Icon="@Icons.Material.Filled.Backup" />
-                                <span>6. Backups and Exports</span>
-                            </div>
-                        </TitleContent>
+                                <span id="policy-backups">6. Backups and Exports</span>
+                            </h2>
 
-                        <ChildContent>
+
+
                             <div class="privacy-panel-content">
 
                                 <MudText Typo="Typo.body1">
@@ -556,20 +591,20 @@
                                 </MudAlert>
 
                             </div>
-                        </ChildContent>
 
-                    </MudExpansionPanel>
 
-                    <MudExpansionPanel>
+                    </section>
 
-                        <TitleContent>
-                            <div class="policy-section-heading">
+                    <section class="policy-section">
+
+
+                            <h2 class="policy-section-heading">
                                 <MudIcon Icon="@Icons.Material.Filled.Security" />
-                                <span>7. Security</span>
-                            </div>
-                        </TitleContent>
+                                <span id="policy-security">7. Security</span>
+                            </h2>
 
-                        <ChildContent>
+
+
                             <div class="privacy-panel-content">
 
                                 <div class="privacy-security-callout">
@@ -618,20 +653,20 @@
                                 </MudText>
 
                             </div>
-                        </ChildContent>
 
-                    </MudExpansionPanel>
 
-                    <MudExpansionPanel>
+                    </section>
 
-                        <TitleContent>
-                            <div class="policy-section-heading">
+                    <section class="policy-section">
+
+
+                            <h2 class="policy-section-heading">
                                 <MudIcon Icon="@Icons.Material.Filled.Delete" />
-                                <span>8. Data Retention and Deletion</span>
-                            </div>
-                        </TitleContent>
+                                <span id="policy-retention">8. Data Retention and Deletion</span>
+                            </h2>
 
-                        <ChildContent>
+
+
                             <div class="privacy-panel-content">
 
                                 <MudText Typo="Typo.body1">
@@ -673,20 +708,20 @@
                                 </MudText>
 
                             </div>
-                        </ChildContent>
 
-                    </MudExpansionPanel>
 
-                    <MudExpansionPanel>
+                    </section>
 
-                        <TitleContent>
-                            <div class="policy-section-heading">
+                    <section class="policy-section">
+
+
+                            <h2 class="policy-section-heading">
                                 <MudIcon Icon="@Icons.Material.Filled.ChildCare" />
-                                <span>9. Children's Privacy</span>
-                            </div>
-                        </TitleContent>
+                                <span id="policy-children">9. Children's Privacy</span>
+                            </h2>
 
-                        <ChildContent>
+
+
                             <div class="privacy-panel-content">
 
                                 <MudText Typo="Typo.body1">
@@ -703,20 +738,20 @@
                                 </MudText>
 
                             </div>
-                        </ChildContent>
 
-                    </MudExpansionPanel>
 
-                    <MudExpansionPanel>
+                    </section>
 
-                        <TitleContent>
-                            <div class="policy-section-heading">
+                    <section class="policy-section">
+
+
+                            <h2 class="policy-section-heading">
                                 <MudIcon Icon="@Icons.Material.Filled.Extension" />
-                                <span>10. Third-Party Services</span>
-                            </div>
-                        </TitleContent>
+                                <span id="policy-services">10. Third-Party Services</span>
+                            </h2>
 
-                        <ChildContent>
+
+
                             <div class="privacy-panel-content">
 
                                 <MudText Typo="Typo.body1">
@@ -756,20 +791,20 @@
                                 </MudText>
 
                             </div>
-                        </ChildContent>
 
-                    </MudExpansionPanel>
 
-                    <MudExpansionPanel>
+                    </section>
 
-                        <TitleContent>
-                            <div class="policy-section-heading">
+                    <section class="policy-section">
+
+
+                            <h2 class="policy-section-heading">
                                 <MudIcon Icon="@Icons.Material.Filled.AdminPanelSettings" />
-                                <span>11. Permissions</span>
-                            </div>
-                        </TitleContent>
+                                <span id="policy-permissions">11. Permissions</span>
+                            </h2>
 
-                        <ChildContent>
+
+
                             <div class="privacy-panel-content">
 
                                 <MudText Typo="Typo.body1">
@@ -794,20 +829,20 @@
                                 </MudAlert>
 
                             </div>
-                        </ChildContent>
 
-                    </MudExpansionPanel>
 
-                    <MudExpansionPanel>
+                    </section>
 
-                        <TitleContent>
-                            <div class="policy-section-heading">
+                    <section class="policy-section">
+
+
+                            <h2 class="policy-section-heading">
                                 <MudIcon Icon="@Icons.Material.Filled.Update" />
-                                <span>12. Changes to This Privacy Policy</span>
-                            </div>
-                        </TitleContent>
+                                <span id="policy-changes">12. Changes to This Privacy Policy</span>
+                            </h2>
 
-                        <ChildContent>
+
+
                             <div class="privacy-panel-content">
 
                                 <MudText Typo="Typo.body1">
@@ -833,20 +868,20 @@
                                 </MudAlert>
 
                             </div>
-                        </ChildContent>
 
-                    </MudExpansionPanel>
 
-                    <MudExpansionPanel>
+                    </section>
 
-                        <TitleContent>
-                            <div class="policy-section-heading">
+                    <section class="policy-section">
+
+
+                            <h2 class="policy-section-heading">
                                 <MudIcon Icon="@Icons.Material.Filled.ContactMail" />
-                                <span>13. Contact</span>
-                            </div>
-                        </TitleContent>
+                                <span id="policy-contact">13. Contact</span>
+                            </h2>
 
-                        <ChildContent>
+
+
                             <div class="privacy-panel-content">
 
                                 <MudText Typo="Typo.body1">
@@ -883,17 +918,22 @@
                                 </MudList>
 
                             </div>
-                        </ChildContent>
 
-                    </MudExpansionPanel>
 
-                </MudExpansionPanels>
+                    </section>
+
+                </div>
 
             </MudPaper>
+                </MudItem>
+
+            </MudGrid>
 
         </div>
 
-        <div class="privacy-footer">
+        </main>
+
+        <footer class="privacy-footer">
 
             <MudDivider Class="privacy-footer-divider" />
 
@@ -905,7 +945,17 @@
                 Privacy Policy · Effective September 25, 2026
             </MudText>
 
-        </div>
+        </footer>
 
-    </div>
+    </MudContainer>
 </div>
+
+@code {
+    [CascadingParameter(Name = "ThemeIsDark")]
+    public bool ThemeIsDark { get; set; } = true;
+
+    [CascadingParameter(Name = "ToggleTheme")]
+    public Func<Task>? ToggleTheme { get; set; }
+
+    private Task TogglePortfolioTheme() => ToggleTheme?.Invoke() ?? Task.CompletedTask;
+}
