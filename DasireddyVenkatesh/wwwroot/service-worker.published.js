@@ -25,6 +25,10 @@ async function onInstall(event) {
         .filter(asset => !offlineAssetsExclude.some(pattern => pattern.test(asset.url)))
         .map(asset => new Request(asset.url, { integrity: asset.hash, cache: 'no-cache' }));
     await caches.open(cacheName).then(cache => cache.addAll(assetsRequests));
+
+    // Activate this complete, versioned cache immediately so newly published routes
+    // don't remain hidden behind an older worker until every app tab is closed.
+    await self.skipWaiting();
 }
 
 async function onActivate(event) {
@@ -32,9 +36,22 @@ async function onActivate(event) {
 
     // Delete unused caches
     const cacheKeys = await caches.keys();
+    const isReplacingAnExistingAppCache = cacheKeys.some(key =>
+        key.startsWith(cacheNamePrefix) && key !== cacheName);
     await Promise.all(cacheKeys
         .filter(key => key.startsWith(cacheNamePrefix) && key !== cacheName)
         .map(key => caches.delete(key)));
+
+    await self.clients.claim();
+
+    // Existing tabs may still contain code from the old cache. Reload them onto
+    // this worker's complete asset snapshot so newly built routes become available.
+    if (isReplacingAnExistingAppCache) {
+        const windows = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+        await Promise.all(windows
+            .filter(client => client.url.startsWith(self.registration.scope))
+            .map(client => client.navigate(client.url)));
+    }
 }
 
 async function onFetch(event) {
