@@ -6,6 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Goa Trip 2026</title>
+
     <link rel="stylesheet" href="/css/Goa.css">
 </head>
 <body>
@@ -57,16 +58,16 @@
 
                 <div class="weather">
                     <div class="weatherbox">
-                        <div class="label">OFFICIAL IMD WEATHER</div>
+                        <div class="label">GOA WEATHER • BAGA / NORTH GOA</div>
                         <div class="temp" id="temp">--</div>
-                        <div class="sub" id="weatherText">Waiting for official IMD data...</div>
-                        <div class="weatheralert" id="weatherAlert">IMD direct browser access may require public-IP whitelisting.</div>
-                        <div class="muted" style="margin-top:9px">Source: India Meteorological Department</div>
+                        <div class="sub" id="weatherText">Loading forecast...</div>
+                        <div class="weatheralert" id="weatherAlert">Weather powered by Open-Meteo.</div>
+                        <div class="muted" style="margin-top:9px">Forecast source: <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a></div>
                     </div>
                     <div class="weatherbox">
                         <div class="label">HOURLY WEATHER</div>
                         <div class="hours" id="hours"></div>
-                        <div class="muted" style="margin-top:9px">No unofficial provider is substituted for IMD. Configure an official proxy if hourly data is exposed through one.</div>
+                        <div class="muted weatherhint">Swipe left/right for more hours • temperature + rain probability.</div>
                     </div>
                 </div>
 
@@ -127,177 +128,227 @@
     <div class="toast" id="toast"></div>
 
     <script>
-            const TRIP=["2026-09-29","2026-09-30","2026-10-01","2026-10-02","2026-10-03","2026-10-04"];
-            const START=new Date("2026-09-29T16:00:00+05:30");
-            const END=new Date("2026-10-04T23:59:59+05:30");
-            const STORE="goa-trip-2026-v2";
+            const TRIP = ["2026-09-29", "2026-09-30", "2026-10-01", "2026-10-02", "2026-10-03", "2026-10-04"];
+            const START = new Date("2026-09-29T16:00:00+05:30");
+            const END = new Date("2026-10-04T23:59:59+05:30");
+            const STORE = "goa-trip-2026-v2";
 
-            /*
-            Official IMD direct API:
-            https://city.imd.gov.in/api/cityweather.php?id=42182
-            IMD documents public-IP whitelisting for this API. For a browser-only page,
-            leave PROXY blank and the page will clearly report the limitation.
-            If you have an approved server/proxy that forwards official IMD data, set it here.
-            */
-            const IMD_PROXY="";
-            const IMD_DIRECT="https://city.imd.gov.in/api/cityweather.php?id=42182";
+            /* Open-Meteo: free, no API key required for non-commercial use.
+               Goa coordinates: Panaji area. Forecast is returned in Asia/Kolkata time. */
+            const WEATHER_LAT = 15.4909;
+            const WEATHER_LON = 73.8278;
+            const WEATHER_API = "https://api.open-meteo.com/v1/forecast";
 
-            const A=[
-            ["2026-09-29","16:00","17:00","Depart Bangalore","Travel","Bangalore","Start the Goa road trip in your own car.",0],
-            ["2026-09-29","19:30","20:15","Dinner Stop","Food","Highway","Dinner and driver change if needed.",0],
-            ["2026-09-29","23:30","23:59","Highway Break","Travel","Highway","Short rest break.",0],
+            const A = [
+                ["2026-09-29", "16:00", "17:00", "Depart Bangalore", "Travel", "Bangalore", "Start the Goa road trip in your own car.", 0],
+                ["2026-09-29", "19:30", "20:15", "Dinner Stop", "Food", "Highway", "Dinner and driver change if needed.", 0],
+                ["2026-09-29", "23:30", "23:59", "Highway Break", "Travel", "Highway", "Short rest break.", 0],
 
-            ["2026-09-30","11:00","12:00","Reach Goa","Travel","Goa","Reach Goa and drive to the hotel.",0],
-            ["2026-09-30","12:00","13:00","Hotel Check-in","Relax","Treebo Sunshine Beach Resort","Freshen up.",0],
-            ["2026-09-30","13:00","14:00","Lunch","Food","Baga / Calangute","Telugu/Andhra or Goan non-veg.",0],
-            ["2026-09-30","14:00","16:30","Hotel Rest","Relax","Hotel","Recover after overnight drive.",0],
-            ["2026-09-30","17:00","18:00","Baga Beach","Beach","Baga","Relax and photos.",0],
-            ["2026-09-30","18:00","19:30","Baga / Calangute Street Shopping","Market","Baga / Calangute","Beachwear, T-shirts, souvenirs, sunglasses and local shopping.",0],
-            ["2026-09-30","20:00","21:00","Dinner","Food","Baga / Calangute","Dinner near hotel.",0],
-            ["2026-09-30","21:30","23:59","Baga Nightlife / Tito's Lane","Nightlife","Baga","Optional nightlife and party.",1],
+                ["2026-09-30", "11:00", "12:00", "Reach Goa", "Travel", "Goa", "Reach Goa and drive to the hotel.", 0],
+                ["2026-09-30", "12:00", "13:00", "Hotel Check-in", "Relax", "Treebo Sunshine Beach Resort", "Freshen up.", 0],
+                ["2026-09-30", "13:00", "14:00", "Lunch", "Food", "Baga / Calangute", "Telugu/Andhra or Goan non-veg.", 0],
+                ["2026-09-30", "14:00", "16:30", "Hotel Rest", "Relax", "Hotel", "Recover after overnight drive.", 0],
+                ["2026-09-30", "17:00", "18:00", "Baga Beach", "Beach", "Baga", "Relax and photos.", 0],
+                ["2026-09-30", "18:00", "19:30", "Baga / Calangute Street Shopping", "Market", "Baga / Calangute", "Beachwear, T-shirts, souvenirs, sunglasses and local shopping.", 0],
+                ["2026-09-30", "20:00", "21:00", "Dinner", "Food", "Baga / Calangute", "Dinner near hotel.", 0],
+                ["2026-09-30", "21:30", "23:59", "Baga Nightlife / Tito's Lane", "Nightlife", "Baga", "Optional nightlife and party.", 1],
 
-            ["2026-10-01","07:00","07:30","Wake Up","Relax","Hotel","Start main North Goa activity day.",0],
-            ["2026-10-01","07:30","08:00","Breakfast","Food","Baga","Breakfast.",0],
-            ["2026-10-01","08:00","08:30","Check Sea & Weather Conditions","Water Sports","Baga / Calangute","Confirm local operator and sea safety before entering water.",0],
-            ["2026-10-01","08:30","11:00","Water Sports: Jet Ski + Parasailing + Banana/Bump","Water Sports","Baga / Calangute","Only if local operators confirm safe conditions.",0],
-            ["2026-10-01","11:00","12:00","Hotel Shower & Rest","Relax","Hotel","Shower and rest.",0],
-            ["2026-10-01","12:30","13:30","Telugu / Andhra Lunch","Food","Calangute","Andhra/Telugu lunch.",0],
-            ["2026-10-01","14:00","15:00","Fort Aguada","Fort","Aguada","Fort and viewpoint.",0],
-            ["2026-10-01","15:15","15:45","Sinquerim","Beach","Sinquerim","Coastal stop.",0],
-            ["2026-10-01","16:00","17:00","Candolim","Beach","Candolim","Beach road and shops.",0],
-            ["2026-10-01","17:00","18:30","Candolim / Calangute Shopping","Market","Candolim / Calangute","Street shopping.",0],
-            ["2026-10-01","20:00","21:00","Dinner","Food","Baga / Calangute","Dinner.",0],
-            ["2026-10-01","21:30","23:59","Baga Party / Nightlife","Nightlife","Baga","Optional party.",1],
+                ["2026-10-01", "07:00", "07:30", "Wake Up", "Relax", "Hotel", "Start main North Goa activity day.", 0],
+                ["2026-10-01", "07:30", "08:00", "Breakfast", "Food", "Baga", "Breakfast.", 0],
+                ["2026-10-01", "08:00", "08:30", "Check Sea & Weather Conditions", "Water Sports", "Baga / Calangute", "Confirm local operator and sea safety before entering water.", 0],
+                ["2026-10-01", "08:30", "11:00", "Water Sports: Jet Ski + Parasailing + Banana/Bump", "Water Sports", "Baga / Calangute", "Only if local operators confirm safe conditions.", 0],
+                ["2026-10-01", "11:00", "12:00", "Hotel Shower & Rest", "Relax", "Hotel", "Shower and rest.", 0],
+                ["2026-10-01", "12:30", "13:30", "Telugu / Andhra Lunch", "Food", "Calangute", "Andhra/Telugu lunch.", 0],
+                ["2026-10-01", "14:00", "15:00", "Fort Aguada", "Fort", "Aguada", "Fort and viewpoint.", 0],
+                ["2026-10-01", "15:15", "15:45", "Sinquerim", "Beach", "Sinquerim", "Coastal stop.", 0],
+                ["2026-10-01", "16:00", "17:00", "Candolim", "Beach", "Candolim", "Beach road and shops.", 0],
+                ["2026-10-01", "17:00", "18:30", "Candolim / Calangute Shopping", "Market", "Candolim / Calangute", "Street shopping.", 0],
+                ["2026-10-01", "20:00", "21:00", "Dinner", "Food", "Baga / Calangute", "Dinner.", 0],
+                ["2026-10-01", "21:30", "23:59", "Baga Party / Nightlife", "Nightlife", "Baga", "Optional party.", 1],
 
-            ["2026-10-02","08:00","08:45","Breakfast","Food","Baga","Breakfast.",0],
-            ["2026-10-02","09:00","10:15","Anjuna","Beach","Anjuna","Beach, shops and cafés.",0],
-            ["2026-10-02","10:30","11:30","Chapora Fort","Fort","Chapora","Fort viewpoint.",0],
-            ["2026-10-02","11:45","12:30","Vagator","Beach","Vagator","Coastal viewpoint.",0],
-            ["2026-10-02","12:30","13:30","Lunch","Food","Vagator / Anjuna","Lunch.",0],
-            ["2026-10-02","14:00","15:30","Old Goa Churches","Church","Old Goa","Basilica of Bom Jesus, Sé Cathedral and Church of St Cajetan.",0],
-            ["2026-10-02","15:30","16:15","St Augustine Ruins","Heritage","Old Goa","Historic ruins.",1],
-            ["2026-10-02","16:15","16:45","Viceroy's Arch","Heritage","Old Goa","Quick heritage stop.",1],
-            ["2026-10-02","17:00","18:00","Fontainhas","Heritage","Panjim","Portuguese-era streets and photos.",0],
-            ["2026-10-02","18:00","18:45","Panjim / Mandovi Riverfront","Viewpoint","Panjim","City evening.",0],
-            ["2026-10-02","19:00","20:00","Dinner","Food","Panjim","Dinner before southward drive.",0],
-            ["2026-10-02","20:00","21:00","Drive toward South Goa","Travel","South Goa","Move closer to South Goa if hotel is there.",0],
+                ["2026-10-02", "08:00", "08:45", "Breakfast", "Food", "Baga", "Breakfast.", 0],
+                ["2026-10-02", "09:00", "10:15", "Anjuna", "Beach", "Anjuna", "Beach, shops and cafés.", 0],
+                ["2026-10-02", "10:30", "11:30", "Chapora Fort", "Fort", "Chapora", "Fort viewpoint.", 0],
+                ["2026-10-02", "11:45", "12:30", "Vagator", "Beach", "Vagator", "Coastal viewpoint.", 0],
+                ["2026-10-02", "12:30", "13:30", "Lunch", "Food", "Vagator / Anjuna", "Lunch.", 0],
+                ["2026-10-02", "14:00", "15:30", "Old Goa Churches", "Church", "Old Goa", "Basilica of Bom Jesus, Sé Cathedral and Church of St Cajetan.", 0],
+                ["2026-10-02", "15:30", "16:15", "St Augustine Ruins", "Heritage", "Old Goa", "Historic ruins.", 1],
+                ["2026-10-02", "16:15", "16:45", "Viceroy's Arch", "Heritage", "Old Goa", "Quick heritage stop.", 1],
+                ["2026-10-02", "17:00", "18:00", "Fontainhas", "Heritage", "Panjim", "Portuguese-era streets and photos.", 0],
+                ["2026-10-02", "18:00", "18:45", "Panjim / Mandovi Riverfront", "Viewpoint", "Panjim", "City evening.", 0],
+                ["2026-10-02", "19:00", "20:00", "Dinner", "Food", "Panjim", "Dinner before southward drive.", 0],
+                ["2026-10-02", "20:00", "21:00", "Drive toward South Goa", "Travel", "South Goa", "Move closer to South Goa if hotel is there.", 0],
 
-            ["2026-10-03","07:00","07:45","Breakfast","Food","South Goa","Breakfast.",0],
-            ["2026-10-03","08:00","10:00","Drive to Palolem","Travel","Palolem","South Goa road trip.",0],
-            ["2026-10-03","10:00","12:00","Palolem","Beach","Palolem","Beach, shops and cafés.",0],
-            ["2026-10-03","10:30","12:00","Kayaking / Boat Ride","Water Sports","Palolem","Backup water activity if Day 2 activity was cancelled and conditions are safe.",1],
-            ["2026-10-03","12:30","13:30","Lunch","Food","Palolem","Lunch.",0],
-            ["2026-10-03","14:00","15:00","Patnem","Beach","Patnem","Relaxed South Goa stop.",0],
-            ["2026-10-03","15:30","17:00","Cabo de Rama Fort","Fort","Cabo de Rama","Fort and coastline.",0],
-            ["2026-10-03","17:15","18:15","South Goa Sunset","Beach","South Goa","Sunset.",0],
-            ["2026-10-03","19:30","20:30","Dinner","Food","Palolem / South Goa","Dinner.",0],
-            ["2026-10-03","21:00","23:30","South Goa Nightlife","Nightlife","Palolem","Optional; quieter than Baga.",1],
+                ["2026-10-03", "07:00", "07:45", "Breakfast", "Food", "South Goa", "Breakfast.", 0],
+                ["2026-10-03", "08:00", "10:00", "Drive to Palolem", "Travel", "Palolem", "South Goa road trip.", 0],
+                ["2026-10-03", "10:00", "12:00", "Palolem", "Beach", "Palolem", "Beach, shops and cafés.", 0],
+                ["2026-10-03", "10:30", "12:00", "Kayaking / Boat Ride", "Water Sports", "Palolem", "Backup water activity if Day 2 activity was cancelled and conditions are safe.", 1],
+                ["2026-10-03", "12:30", "13:30", "Lunch", "Food", "Palolem", "Lunch.", 0],
+                ["2026-10-03", "14:00", "15:00", "Patnem", "Beach", "Patnem", "Relaxed South Goa stop.", 0],
+                ["2026-10-03", "15:30", "17:00", "Cabo de Rama Fort", "Fort", "Cabo de Rama", "Fort and coastline.", 0],
+                ["2026-10-03", "17:15", "18:15", "South Goa Sunset", "Beach", "South Goa", "Sunset.", 0],
+                ["2026-10-03", "19:30", "20:30", "Dinner", "Food", "Palolem / South Goa", "Dinner.", 0],
+                ["2026-10-03", "21:00", "23:30", "South Goa Nightlife", "Nightlife", "Palolem", "Optional; quieter than Baga.", 1],
 
-            /* 4 OCT: DUDHSAGAR FIRST, RETURN AFTERNOON ONLY IF CIRCUIT IS OPEN AND TIME WORKS */
-            ["2026-10-04","04:30","06:30","Drive to Collem / Mollem","Travel","Collem","Very early start. Confirm Dudhsagar circuit status the previous evening.",0],
-            ["2026-10-04","06:30","07:30","Dudhsagar Access Confirmation","Waterfall","Collem","Conditional: enter only through currently authorized Forest Department access.",0],
-            ["2026-10-04","07:30","11:00","Dudhsagar Falls","Waterfall","Dudhsagar / Bhagwan Mahavir Sanctuary","Conditional. Jeep/trek access depends on official opening, weather and forest rules. Do not use railway tracks.",1],
-            ["2026-10-04","11:00","12:00","Return to Collem","Travel","Collem","Return from Dudhsagar if operating.",1],
-            ["2026-10-04","12:00","13:00","Quick Lunch","Food","Central Goa","Lunch before Bangalore drive.",0],
-            ["2026-10-04","13:00","23:59","Goa → Bangalore","Travel","Bangalore","Return journey. If Dudhsagar is unavailable, start earlier from Goa.",0],
+                /* 4 OCT: DUDHSAGAR FIRST, RETURN AFTERNOON ONLY IF CIRCUIT IS OPEN AND TIME WORKS */
+                ["2026-10-04", "04:30", "06:30", "Drive to Collem / Mollem", "Travel", "Collem", "Very early start. Confirm Dudhsagar circuit status the previous evening.", 0],
+                ["2026-10-04", "06:30", "07:30", "Dudhsagar Access Confirmation", "Waterfall", "Collem", "Conditional: enter only through currently authorized Forest Department access.", 0],
+                ["2026-10-04", "07:30", "11:00", "Dudhsagar Falls", "Waterfall", "Dudhsagar / Bhagwan Mahavir Sanctuary", "Conditional. Jeep/trek access depends on official opening, weather and forest rules. Do not use railway tracks.", 1],
+                ["2026-10-04", "11:00", "12:00", "Return to Collem", "Travel", "Collem", "Return from Dudhsagar if operating.", 1],
+                ["2026-10-04", "12:00", "13:00", "Quick Lunch", "Food", "Central Goa", "Lunch before Bangalore drive.", 0],
+                ["2026-10-04", "13:00", "23:59", "Goa → Bangalore", "Travel", "Bangalore", "Return journey. If Dudhsagar is unavailable, start earlier from Goa.", 0],
 
-            /* ADDITIONAL IMPORTANT CENTRAL GOA OPTIONS */
-            ["2026-10-03","09:00","10:00","Ponda / Spice Plantation","Nature","Ponda","Optional Central Goa experience; add if it fits the route.",1],
-            ["2026-10-03","09:00","10:00","Shantadurga / Mangeshi Temple","Temple","Ponda","Optional Central Goa cultural stop.",1],
-            ["2026-10-03","09:00","10:00","Mahadev Temple Tambdi Surla","Temple","Tambdi Surla","Optional; allow extra driving time.",1],
-            ["2026-10-03","09:00","10:00","Mayem Lake","Nature","Mayem","Optional North/Central Goa lake experience.",1],
-            ["2026-10-03","09:00","10:00","Arvalem Waterfall & Caves","Nature","Sanquelim","Optional inland Goa alternative.",1],
-            ["2026-10-02","18:00","19:00","Dona Paula Viewpoint","Viewpoint","Panjim","Optional if timing permits before dinner.",1],
-            ["2026-10-01","18:00","19:00","Reis Magos Fort","Fort","Reis Magos","Optional additional fort if you want more heritage.",1],
-            ["2026-10-01","18:00","19:00","Reis Magos Church","Church","Reis Magos","Optional church/heritage stop.",1],
-            ["2026-10-02","09:00","10:00","Our Lady of Immaculate Conception Church","Church","Panjim","Optional central Panjim church.",1],
-            ["2026-10-02","10:00","11:00","Goa State Museum / Archaeological Museum","Museum","Panjim / Old Goa","Optional depending on opening hours.",1],
-            ["2026-10-03","09:00","10:00","Benaulim / Varca","Beach","South Goa","Optional quieter beach alternative.",1],
-            ["2026-10-03","09:00","10:00","Cola Beach","Beach","South Goa","Optional scenic beach; extra driving.",1],
-            ["2026-10-03","09:00","10:00","Agonda Beach","Beach","South Goa","Optional if you want more South Goa coastline.",1],
-            ["2026-10-01","18:00","19:00","Calangute Market","Market","Calangute","Optional additional shopping stop.",1],
-            ["2026-10-01","18:00","19:00","Baga Beach Market","Market","Baga","Optional shopping.",1],
-            ["2026-10-02","09:00","10:00","Anjuna Local Shopping","Market","Anjuna","Optional shopping.",1]
-            ].map((x,i)=>({id:"seed"+i,date:x[0],start:x[1],end:x[2],name:x[3],category:x[4],location:x[5],desc:x[6],optional:!!x[7],status:"pending",maps:""}));
+                /* ADDITIONAL IMPORTANT CENTRAL GOA OPTIONS */
+                ["2026-10-03", "09:00", "10:00", "Ponda / Spice Plantation", "Nature", "Ponda", "Optional Central Goa experience; add if it fits the route.", 1],
+                ["2026-10-03", "09:00", "10:00", "Shantadurga / Mangeshi Temple", "Temple", "Ponda", "Optional Central Goa cultural stop.", 1],
+                ["2026-10-03", "09:00", "10:00", "Mahadev Temple Tambdi Surla", "Temple", "Tambdi Surla", "Optional; allow extra driving time.", 1],
+                ["2026-10-03", "09:00", "10:00", "Mayem Lake", "Nature", "Mayem", "Optional North/Central Goa lake experience.", 1],
+                ["2026-10-03", "09:00", "10:00", "Arvalem Waterfall & Caves", "Nature", "Sanquelim", "Optional inland Goa alternative.", 1],
+                ["2026-10-02", "18:00", "19:00", "Dona Paula Viewpoint", "Viewpoint", "Panjim", "Optional if timing permits before dinner.", 1],
+                ["2026-10-01", "18:00", "19:00", "Reis Magos Fort", "Fort", "Reis Magos", "Optional additional fort if you want more heritage.", 1],
+                ["2026-10-01", "18:00", "19:00", "Reis Magos Church", "Church", "Reis Magos", "Optional church/heritage stop.", 1],
+                ["2026-10-02", "09:00", "10:00", "Our Lady of Immaculate Conception Church", "Church", "Panjim", "Optional central Panjim church.", 1],
+                ["2026-10-02", "10:00", "11:00", "Goa State Museum / Archaeological Museum", "Museum", "Panjim / Old Goa", "Optional depending on opening hours.", 1],
+                ["2026-10-03", "09:00", "10:00", "Benaulim / Varca", "Beach", "South Goa", "Optional quieter beach alternative.", 1],
+                ["2026-10-03", "09:00", "10:00", "Cola Beach", "Beach", "South Goa", "Optional scenic beach; extra driving.", 1],
+                ["2026-10-03", "09:00", "10:00", "Agonda Beach", "Beach", "South Goa", "Optional if you want more South Goa coastline.", 1],
+                ["2026-10-01", "18:00", "19:00", "Calangute Market", "Market", "Calangute", "Optional additional shopping stop.", 1],
+                ["2026-10-01", "18:00", "19:00", "Baga Beach Market", "Market", "Baga", "Optional shopping.", 1],
+                ["2026-10-02", "09:00", "10:00", "Anjuna Local Shopping", "Market", "Anjuna", "Optional shopping.", 1]
+            ].map((x, i) => ({ id: "seed" + i, date: x[0], start: x[1], end: x[2], name: x[3], category: x[4], location: x[5], desc: x[6], optional: !!x[7], status: "pending", maps: "" }));
 
-            let activities=JSON.parse(localStorage.getItem(STORE)||"null")||A;
-            let selected=getAutoDate(), cal=new Date(selected.getFullYear(),selected.getMonth(),1), editId=null;
+            let activities = JSON.parse(localStorage.getItem(STORE) || "null") || A;
+            let selected = getAutoDate(), cal = new Date(selected.getFullYear(), selected.getMonth(), 1), editId = null;
 
-            const info={
-            "2026-09-29":["Departure Day","Bangalore → Goa overnight road trip"],
-            "2026-09-30":["Arrival + Baga / Calangute","Rest, beach, shopping and optional nightlife"],
-            "2026-10-01":["Water Sports + North Goa","Water activities, Aguada, Candolim, shopping and optional party"],
-            "2026-10-02":["Anjuna + Old Goa + Panjim","North Goa, churches, forts, heritage and Central Goa"],
-            "2026-10-03":["South Goa + Inland Options","Palolem, Patnem, Cabo de Rama and optional Central Goa"],
-            "2026-10-04":["Dudhsagar + Return","Conditional early Dudhsagar plan followed by Bangalore return"]
+            const info = {
+                "2026-09-29": ["Departure Day", "Bangalore → Goa overnight road trip"],
+                "2026-09-30": ["Arrival + Baga / Calangute", "Rest, beach, shopping and optional nightlife"],
+                "2026-10-01": ["Water Sports + North Goa", "Water activities, Aguada, Candolim, shopping and optional party"],
+                "2026-10-02": ["Anjuna + Old Goa + Panjim", "North Goa, churches, forts, heritage and Central Goa"],
+                "2026-10-03": ["South Goa + Inland Options", "Palolem, Patnem, Cabo de Rama and optional Central Goa"],
+                "2026-10-04": ["Dudhsagar + Return", "Conditional early Dudhsagar plan followed by Bangalore return"]
             };
 
-            function key(d){return d.toLocaleDateString("en-CA")}
-            function from(k){let [y,m,d]=k.split("-").map(Number);return new Date(y,m-1,d)}
-            function getAutoDate(){let n=new Date();if(n<START)return from(TRIP[0]);if(n>END)return from(TRIP[5]);let k=key(n);return TRIP.includes(k)?n:from(TRIP[0])}
-            function mins(v){let [h,m]=v.split(":").map(Number);return h*60+m}
-            function tm(v){let [h,m]=v.split(":").map(Number);return `${h%12||12}:${String(m).padStart(2,"0")} ${h>=12?"PM":"AM"}`}
-            function icon(c){return {Beach:"🏖️","Water Sports":"🏄",Nightlife:"🎉",Shopping:"🛍️",Market:"🛍️",Food:"🍗",Church:"⛪",Fort:"🏰",Heritage:"🏛️",Nature:"🌿",Waterfall:"💦",Temple:"🛕",Museum:"🏺",Viewpoint:"📸",Adventure:"🧗",Travel:"🚗",Relax:"😎",Other:"📌"}[c]||"📌"}
-            function save(){localStorage.setItem(STORE,JSON.stringify(activities))}
-            function render(){calendar();day();progress();countdown();weather()}
-            function calendar(){
-            let g=document.getElementById("calendar");g.innerHTML="";
-            document.getElementById("month").textContent=cal.toLocaleDateString("en-IN",{month:"long",year:"numeric"});
-            ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].forEach(x=>{let e=document.createElement("div");e.className="weekday";e.textContent=x;g.appendChild(e)});
-            let first=new Date(cal.getFullYear(),cal.getMonth(),1),off=(first.getDay()+6)%7;
-            for(let i=0;i<off;i++)g.appendChild(document.createElement("div"));
-            let total=new Date(cal.getFullYear(),cal.getMonth()+1,0).getDate();
-            for(let d=1;d<=total;d++){
-            let dt=new Date(cal.getFullYear(),cal.getMonth(),d),k=key(dt),e=document.createElement("div");e.className="day";
-            if(TRIP.includes(k))e.classList.add("trip");if(k===key(selected))e.classList.add("selected");if(k===key(new Date()))e.classList.add("today");
-            let ix=TRIP.indexOf(k), ic=["🚗","🏖️","🏄","⛪","🌴","💦"][ix]||"";
-            let n=activities.filter(a=>a.date===k).length;
-            e.innerHTML=`<b>${d}</b>${ix>=0?`<div class="icon">${ic}</div>`:""}${n?`<div class="mini">${n} activities</div>`:""}`;
-            if(TRIP.includes(k))e.onclick=()=>{selected=dt;cal=new Date(dt.getFullYear(),dt.getMonth(),1);render()};g.appendChild(e)
-            }}
-            function month(n){cal=new Date(cal.getFullYear(),cal.getMonth()+n,1);calendar()}
-            function today(){selected=getAutoDate();cal=new Date(selected.getFullYear(),selected.getMonth(),1);render()}
-            function prevDay(){let i=TRIP.indexOf(key(selected));if(i>0){selected=from(TRIP[i-1]);cal=new Date(selected.getFullYear(),selected.getMonth(),1);render()}}
-            function nextDay(){let i=TRIP.indexOf(key(selected));if(i<TRIP.length-1){selected=from(TRIP[i+1]);cal=new Date(selected.getFullYear(),selected.getMonth(),1);render()}}
-            function day(){
-            let k=key(selected),i=TRIP.indexOf(k), arr=activities.filter(a=>a.date===k).sort((a,b)=>mins(a.start)-mins(b.start));
-            document.getElementById("dayNo").textContent=i>=0?`DAY ${i}`:"OUTSIDE TRIP";
-            document.getElementById("dayTitle").textContent=info[k]?.[0]||"Trip Day";
-            document.getElementById("dayDesc").textContent=info[k]?.[1]||"";
-            let t=document.getElementById("timeline");t.innerHTML="";
-            arr.forEach(a=>{
-            let e=document.createElement("div");e.className=`item ${a.status}`;
-            e.innerHTML=`<div class="time">${tm(a.start)}${a.end?`<br>– ${tm(a.end)}`:""}</div><div class="dot"></div><div class="activity"><div class="title">${icon(a.category)} ${esc(a.name)} ${a.optional?'<span class="gold" style="font-size:9px">OPTIONAL</span>':""}</div><div class="cat">${esc(a.category)}</div><div class="desc">${esc(a.desc)}</div><div class="meta"><span class="pill">📍 ${esc(a.location)}</span>${a.status==="completed"?'<span class="pill" style="color:var(--primary)">✓ Completed</span>':a.status==="skipped"?'<span class="pill gold">⏭ Skipped</span>':""}</div><div class="actions">${a.status==="completed"?`<button class="small" onclick="status('${a.id}','pending')">↩ Undo</button>`:`<button class="small" onclick="status('${a.id}','completed')">✓ Complete</button><button class="small gold" onclick="status('${a.id}','skipped')">Skip</button>`}<button class="small blue" onclick="edit('${a.id}')">✎ Edit</button>${a.maps?`<a class="small" target="_blank" href="${esc(a.maps)}">📍 Maps</a>`:""}<button class="small danger" onclick="del('${a.id}')">Delete</button></div></div>`;
-            t.appendChild(e)});
-            if(!arr.length)t.innerHTML='<div class="activity">No activities. Add one above.</div>';
-            let req=arr.filter(a=>!a.optional),done=req.filter(a=>a.status==="completed"),p=req.length?Math.round(done.length/req.length*100):0;
-            document.getElementById("dayPct").textContent=p+"%";document.getElementById("dayFill").style.width=p+"%";
+            function key(d) { return d.toLocaleDateString("en-CA") }
+            function from(k) { let [y, m, d] = k.split("-").map(Number); return new Date(y, m - 1, d) }
+            function getAutoDate() { let n = new Date(); if (n < START) return from(TRIP[0]); if (n > END) return from(TRIP[5]); let k = key(n); return TRIP.includes(k) ? n : from(TRIP[0]) }
+            function mins(v) { let [h, m] = v.split(":").map(Number); return h * 60 + m }
+            function tm(v) { let [h, m] = v.split(":").map(Number); return `${h % 12 || 12}:${String(m).padStart(2, "0")} ${h >= 12 ? "PM" : "AM"}` }
+            function icon(c) { return { Beach: "🏖️", "Water Sports": "🏄", Nightlife: "🎉", Shopping: "🛍️", Market: "🛍️", Food: "🍗", Church: "⛪", Fort: "🏰", Heritage: "🏛️", Nature: "🌿", Waterfall: "💦", Temple: "🛕", Museum: "🏺", Viewpoint: "📸", Adventure: "🧗", Travel: "🚗", Relax: "😎", Other: "📌" }[c] || "📌" }
+            function save() { localStorage.setItem(STORE, JSON.stringify(activities)) }
+            function render() { calendar(); day(); progress(); countdown(); weather() }
+            function calendar() {
+                let g = document.getElementById("calendar"); g.innerHTML = "";
+                document.getElementById("month").textContent = cal.toLocaleDateString("en-IN", { month: "long", year: "numeric" });
+                ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].forEach(x => { let e = document.createElement("div"); e.className = "weekday"; e.textContent = x; g.appendChild(e) });
+                let first = new Date(cal.getFullYear(), cal.getMonth(), 1), off = (first.getDay() + 6) % 7;
+                for (let i = 0; i < off; i++)g.appendChild(document.createElement("div"));
+                let total = new Date(cal.getFullYear(), cal.getMonth() + 1, 0).getDate();
+                for (let d = 1; d <= total; d++) {
+                    let dt = new Date(cal.getFullYear(), cal.getMonth(), d), k = key(dt), e = document.createElement("div"); e.className = "day";
+                    if (TRIP.includes(k)) e.classList.add("trip"); if (k === key(selected)) e.classList.add("selected"); if (k === key(new Date())) e.classList.add("today");
+                    let ix = TRIP.indexOf(k), ic = ["🚗", "🏖️", "🏄", "⛪", "🌴", "💦"][ix] || "";
+                    let n = activities.filter(a => a.date === k).length;
+                    e.innerHTML = `<b>${d}</b>${ix >= 0 ? `<div class="icon">${ic}</div>` : ""}${n ? `<div class="mini">${n} activities</div>` : ""}`;
+                    if (TRIP.includes(k)) e.onclick = () => { selected = dt; cal = new Date(dt.getFullYear(), dt.getMonth(), 1); render() }; g.appendChild(e)
+                }
             }
-            function progress(){let req=activities.filter(a=>!a.optional),done=req.filter(a=>a.status==="completed"),p=req.length?Math.round(done.length/req.length*100):0;document.getElementById("total").textContent=activities.length;document.getElementById("overall").textContent=p+"%";document.getElementById("overallFill").style.width=p+"%"}
-            function status(id,s){let a=activities.find(x=>x.id===id);if(a){a.status=s;save();render();toast(s==="completed"?"Completed":"Updated")}}
-            function del(id){if(confirm("Delete this activity?")){activities=activities.filter(a=>a.id!==id);save();render();toast("Deleted")}}
-            function openModal(a=null){
-            editId=a?.id||null;document.getElementById("modalTitle").textContent=a?"Edit Activity":"Add Activity";
-            document.getElementById("editId").value=a?.id||"";document.getElementById("name").value=a?.name||"";document.getElementById("date").value=a?.date||key(selected);document.getElementById("category").value=a?.category||"Sightseeing";document.getElementById("start").value=a?.start||"09:00";document.getElementById("end").value=a?.end||"";document.getElementById("location").value=a?.location||"";document.getElementById("maps").value=a?.maps||"";document.getElementById("desc").value=a?.desc||"";document.getElementById("optional").checked=!!a?.optional;document.getElementById("modalBack").classList.add("open")
+            function month(n) { cal = new Date(cal.getFullYear(), cal.getMonth() + n, 1); calendar() }
+            function today() { selected = getAutoDate(); cal = new Date(selected.getFullYear(), selected.getMonth(), 1); render() }
+            function prevDay() { let i = TRIP.indexOf(key(selected)); if (i > 0) { selected = from(TRIP[i - 1]); cal = new Date(selected.getFullYear(), selected.getMonth(), 1); render() } }
+            function nextDay() { let i = TRIP.indexOf(key(selected)); if (i < TRIP.length - 1) { selected = from(TRIP[i + 1]); cal = new Date(selected.getFullYear(), selected.getMonth(), 1); render() } }
+            function day() {
+                let k = key(selected), i = TRIP.indexOf(k), arr = activities.filter(a => a.date === k).sort((a, b) => mins(a.start) - mins(b.start));
+                document.getElementById("dayNo").textContent = i >= 0 ? `DAY ${i}` : "OUTSIDE TRIP";
+                document.getElementById("dayTitle").textContent = info[k]?.[0] || "Trip Day";
+                document.getElementById("dayDesc").textContent = info[k]?.[1] || "";
+                let t = document.getElementById("timeline"); t.innerHTML = "";
+                arr.forEach(a => {
+                    let e = document.createElement("div"); e.className = `item ${a.status}`;
+                    e.innerHTML = `<div class="time">${tm(a.start)}${a.end ? `<br>– ${tm(a.end)}` : ""}</div><div class="dot"></div><div class="activity"><div class="title">${icon(a.category)} ${esc(a.name)} ${a.optional ? '<span class="gold" style="font-size:9px">OPTIONAL</span>' : ""}</div><div class="cat">${esc(a.category)}</div><div class="desc">${esc(a.desc)}</div><div class="meta"><span class="pill">📍 ${esc(a.location)}</span>${a.status === "completed" ? '<span class="pill" style="color:var(--primary)">✓ Completed</span>' : a.status === "skipped" ? '<span class="pill gold">⏭ Skipped</span>' : ""}</div><div class="actions">${a.status === "completed" ? `<button class="small" onclick="status('${a.id}','pending')">↩ Undo</button>` : `<button class="small" onclick="status('${a.id}','completed')">✓ Complete</button><button class="small gold" onclick="status('${a.id}','skipped')">Skip</button>`}<button class="small blue" onclick="edit('${a.id}')">✎ Edit</button>${a.maps ? `<a class="small" target="_blank" href="${esc(a.maps)}">📍 Maps</a>` : ""}<button class="small danger" onclick="del('${a.id}')">Delete</button></div></div>`;
+                    t.appendChild(e)
+                });
+                if (!arr.length) t.innerHTML = '<div class="activity">No activities. Add one above.</div>';
+                let req = arr.filter(a => !a.optional), done = req.filter(a => a.status === "completed"), p = req.length ? Math.round(done.length / req.length * 100) : 0;
+                document.getElementById("dayPct").textContent = p + "%"; document.getElementById("dayFill").style.width = p + "%";
             }
-            function edit(id){openModal(activities.find(a=>a.id===id))}
-            function closeModal(){document.getElementById("modalBack").classList.remove("open");editId=null;document.getElementById("form").reset()}
-            document.getElementById("form").onsubmit=e=>{e.preventDefault();let d={name:name.value.trim(),date:date.value,category:category.value,start:start.value,end:end.value,location:location.value.trim(),maps:maps.value.trim(),desc:desc.value.trim(),optional:optional.checked};if(editId){Object.assign(activities.find(a=>a.id===editId),d);toast("Updated")}else{activities.push({id:"custom"+Date.now(),...d,status:"pending"});toast("Added")}save();closeModal();selected=from(d.date);cal=new Date(selected.getFullYear(),selected.getMonth(),1);render()}
-            function countdown(){let diff=START-new Date();if(diff>0){let d=Math.floor(diff/864e5);diff%=864e5;let h=Math.floor(diff/36e5);diff%=36e5;let m=Math.floor(diff/6e4);let s=Math.floor((diff%6e4)/1e3);cdD.textContent=String(d).padStart(2,"0");cdH.textContent=String(h).padStart(2,"0");cdM.textContent=String(m).padStart(2,"0");cdS.textContent=String(s).padStart(2,"0");status.textContent="Departure: 29 Sep 2026 • 4:00 PM"}else{countLabel.textContent="TRIP IN PROGRESS";cdD.textContent="GO";cdH.textContent="GO";cdM.textContent="GO";cdS.textContent="GO";status.textContent="Today: "+selected.toLocaleDateString("en-IN",{weekday:"long",day:"numeric",month:"long"})}}
-            async function weather(){
-            temp.textContent="--";weatherText.textContent="Official IMD data requires approved browser access or proxy";weatherAlert.textContent="Direct IMD API calls may fail because IMD documents public-IP whitelisting. No unofficial weather data is substituted.";
-            hours.innerHTML="";
-            for(let h=8;h<=20;h++){let e=document.createElement("div");e.className="hour";e.innerHTML=`<small>${h%12||12} ${h>=12?"PM":"AM"}</small><b>—</b><small>IMD</small>`;hours.appendChild(e)}
-            let url=IMD_PROXY||IMD_DIRECT;
-            try{
-            let r=await fetch(url,{cache:"no-store"});if(!r.ok)throw Error(r.status);let data=await r.json();let item=findForecast(data,key(selected));if(item){let mx=val(item,["max_temp","maxTemp","max","maxtemp","MaxTemp"]),mn=val(item,["min_temp","minTemp","min","mintemp","MinTemp"]),w=val(item,["weather","description","condition","Weather"]);temp.textContent=(mx||mn)?`${mx||"--"}° / ${mn||"--"}°`:"--";weatherText.textContent=w||"IMD forecast available";weatherAlert.textContent="Official IMD forecast loaded."}else weatherAlert.textContent="Official IMD endpoint responded, but no matching forecast record was found."}catch(e){console.warn("IMD",e)}
+            function progress() { let req = activities.filter(a => !a.optional), done = req.filter(a => a.status === "completed"), p = req.length ? Math.round(done.length / req.length * 100) : 0; document.getElementById("total").textContent = activities.length; document.getElementById("overall").textContent = p + "%"; document.getElementById("overallFill").style.width = p + "%" }
+            function status(id, s) { let a = activities.find(x => x.id === id); if (a) { a.status = s; save(); render(); toast(s === "completed" ? "Completed" : "Updated") } }
+            function del(id) { if (confirm("Delete this activity?")) { activities = activities.filter(a => a.id !== id); save(); render(); toast("Deleted") } }
+            function openModal(a = null) {
+                editId = a?.id || null; document.getElementById("modalTitle").textContent = a ? "Edit Activity" : "Add Activity";
+                document.getElementById("editId").value = a?.id || ""; document.getElementById("name").value = a?.name || ""; document.getElementById("date").value = a?.date || key(selected); document.getElementById("category").value = a?.category || "Sightseeing"; document.getElementById("start").value = a?.start || "09:00"; document.getElementById("end").value = a?.end || ""; document.getElementById("location").value = a?.location || ""; document.getElementById("maps").value = a?.maps || ""; document.getElementById("desc").value = a?.desc || ""; document.getElementById("optional").checked = !!a?.optional; document.getElementById("modalBack").classList.add("open")
             }
-            function findForecast(data,target){let found=null;function walk(v){if(found)return;if(Array.isArray(v))return v.forEach(walk);if(v&&typeof v==="object"){let ds=[v.date,v.Date,v.valid_date,v.forecast_date,v.datetime].filter(Boolean);if(ds.some(x=>{let d=new Date(x);return !isNaN(d)&&key(d)===target}))found=v;else Object.values(v).forEach(walk)}}walk(data);return found}
-            function val(o,ks){for(let k of ks)if(o[k]!=null&&o[k]!=="")return o[k];return null}
-            function esc(v){return String(v||"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;")}
-            let toastTimer;function toast(s){let t=document.getElementById("toast");t.textContent=s;t.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove("show"),1800)}
-            document.getElementById("modalBack").onclick=e=>{if(e.target.id==="modalBack")closeModal()};
-            setInterval(()=>{countdown();let auto=getAutoDate();if(key(new Date())===key(auto)&&key(selected)!==key(auto)){/* manual selection is preserved until Back to Today */}},1000);
+            function edit(id) { openModal(activities.find(a => a.id === id)) }
+            function closeModal() { document.getElementById("modalBack").classList.remove("open"); editId = null; document.getElementById("form").reset() }
+            document.getElementById("form").onsubmit = e => { e.preventDefault(); let d = { name: name.value.trim(), date: date.value, category: category.value, start: start.value, end: end.value, location: location.value.trim(), maps: maps.value.trim(), desc: desc.value.trim(), optional: optional.checked }; if (editId) { Object.assign(activities.find(a => a.id === editId), d); toast("Updated") } else { activities.push({ id: "custom" + Date.now(), ...d, status: "pending" }); toast("Added") } save(); closeModal(); selected = from(d.date); cal = new Date(selected.getFullYear(), selected.getMonth(), 1); render() }
+            function countdown() { let diff = START - new Date(); if (diff > 0) { let d = Math.floor(diff / 864e5); diff %= 864e5; let h = Math.floor(diff / 36e5); diff %= 36e5; let m = Math.floor(diff / 6e4); let s = Math.floor((diff % 6e4) / 1e3); cdD.textContent = String(d).padStart(2, "0"); cdH.textContent = String(h).padStart(2, "0"); cdM.textContent = String(m).padStart(2, "0"); cdS.textContent = String(s).padStart(2, "0"); status.textContent = "Departure: 29 Sep 2026 • 4:00 PM" } else { countLabel.textContent = "TRIP IN PROGRESS"; cdD.textContent = "GO"; cdH.textContent = "GO"; cdM.textContent = "GO"; cdS.textContent = "GO"; status.textContent = "Today: " + selected.toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "long" }) } }
+            async function weather() {
+                temp.textContent = "--";
+                weatherText.textContent = "Loading Goa forecast...";
+                weatherAlert.textContent = "Fetching the latest forecast from Open-Meteo.";
+                hours.innerHTML = "";
+
+                const date = key(selected);
+                const params = new URLSearchParams({
+                    latitude: String(WEATHER_LAT),
+                    longitude: String(WEATHER_LON),
+                    timezone: "Asia/Kolkata",
+                    forecast_days: "16",
+                    current: "temperature_2m,relative_humidity_2m,precipitation,weather_code,wind_speed_10m",
+                    hourly: "temperature_2m,precipitation_probability,precipitation,weather_code,wind_speed_10m",
+                    daily: "weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,precipitation_sum,sunrise,sunset"
+                });
+
+                try {
+                    const r = await fetch(`${WEATHER_API}?${params.toString()}`, { cache: "no-store" });
+                    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+                    const data = await r.json();
+
+                    const di = data.daily.time.indexOf(date);
+                    if (di < 0) throw new Error("Selected date is outside the returned forecast range");
+
+                    const code = data.daily.weather_code[di];
+                    const max = data.daily.temperature_2m_max[di];
+                    const min = data.daily.temperature_2m_min[di];
+                    const rainMax = data.daily.precipitation_probability_max?.[di];
+                    const rainSum = data.daily.precipitation_sum?.[di];
+                    const description = weatherDescription(code);
+
+                    temp.textContent = `${Math.round(max)}° / ${Math.round(min)}°`;
+                    weatherText.textContent = `${description}${rainMax != null ? ` • Rain chance up to ${rainMax}%` : ""}${rainSum != null ? ` • ${Number(rainSum).toFixed(1)} mm expected` : ""}`;
+                    weatherAlert.textContent = `${formatDate(date)} • Sunrise ${formatClock(data.daily.sunrise[di])} • Sunset ${formatClock(data.daily.sunset[di])}`;
+
+                    const selectedHours = [];
+                    for (let i = 0; i < data.hourly.time.length; i++) {
+                        if (data.hourly.time[i].startsWith(date)) {
+                            const hour = Number(data.hourly.time[i].slice(11, 13));
+                            if (hour >= 6 && hour <= 22) selectedHours.push(i);
+                        }
+                    }
+                    selectedHours.forEach(i => {
+                        const e = document.createElement("div");
+                        e.className = "hour";
+                        const rain = data.hourly.precipitation_probability?.[i];
+                        const wc = data.hourly.weather_code?.[i];
+                        e.innerHTML = `<small>${formatClock(data.hourly.time[i])}</small><b>${Math.round(data.hourly.temperature_2m[i])}°</b><small>${weatherEmoji(wc)} ${rain != null ? rain + "% rain" : ""}</small>`;
+                        hours.appendChild(e);
+                    });
+                } catch (e) {
+                    console.warn("Open-Meteo", e);
+                    weatherText.textContent = "Weather could not be loaded right now.";
+                    weatherAlert.textContent = "Please check your internet connection and reload the page.";
+                    hours.innerHTML = '<div class="muted">Hourly forecast unavailable.</div>';
+                }
+            }
+            function formatDate(k) { return from(k).toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short" }) }
+            function formatClock(v) { if (!v) return "--"; let h = Number(v.slice(11, 13)), m = v.slice(14, 16); return `${h % 12 || 12}:${m} ${h >= 12 ? "PM" : "AM"}` }
+            function weatherEmoji(c) { if (c === 0) return "☀️"; if ([1, 2].includes(c)) return "🌤️"; if (c === 3) return "☁️"; if ([45, 48].includes(c)) return "🌫️"; if ([51, 53, 55, 56, 57].includes(c)) return "🌦️"; if ([61, 63, 65, 66, 67].includes(c)) return "🌧️"; if ([71, 73, 75, 77].includes(c)) return "❄️"; if ([80, 81, 82].includes(c)) return "🌦️"; if ([95, 96, 99].includes(c)) return "⛈️"; return "🌡️" }
+            function weatherDescription(c) { if (c === 0) return "Clear sky"; if (c === 1) return "Mainly clear"; if (c === 2) return "Partly cloudy"; if (c === 3) return "Overcast"; if ([45, 48].includes(c)) return "Foggy"; if ([51, 53, 55].includes(c)) return "Drizzle"; if ([56, 57].includes(c)) return "Freezing drizzle"; if ([61, 63, 65].includes(c)) return "Rain"; if ([66, 67].includes(c)) return "Freezing rain"; if ([71, 73, 75, 77].includes(c)) return "Snow"; if ([80, 81, 82].includes(c)) return "Rain showers"; if ([95, 96, 99].includes(c)) return "Thunderstorm"; return "Mixed conditions" }
+            function esc(v) { return String(v || "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;") }
+            let toastTimer; function toast(s) { let t = document.getElementById("toast"); t.textContent = s; t.classList.add("show"); clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove("show"), 1800) }
+            document.getElementById("modalBack").onclick = e => { if (e.target.id === "modalBack") closeModal() };
+            setInterval(() => { countdown(); let auto = getAutoDate(); if (key(new Date()) === key(auto) && key(selected) !== key(auto)) {/* manual selection is preserved until Back to Today */ } }, 1000);
             render();
     </script>
 </body>
