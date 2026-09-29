@@ -59,38 +59,38 @@
     <div id="app"></div>
 
     <main id="startup-screen" class="modern-loader" aria-label="Portfolio loading">
-            <div class="loader-atmosphere" aria-hidden="true"></div>
-            <section class="loader-card" aria-live="polite">
-                <div class="loader-brand-row">
-                    <img src="D_icon_192x192.png"
-                         class="loader-logo"
-                         alt="" />
-                    <div class="loader-brand-copy">
-                        <span class="loader-eyebrow">PERSONAL PORTFOLIO</span>
-                        <span class="loader-brand-name">DasireddyVenkatesh</span>
-                    </div>
-                    <span class="loader-live-dot" aria-label="Starting"></span>
+        <div class="loader-atmosphere" aria-hidden="true"></div>
+        <section class="loader-card" aria-live="polite">
+            <div class="loader-brand-row">
+                <img src="D_icon_192x192.png"
+                     class="loader-logo"
+                     alt="" />
+                <div class="loader-brand-copy">
+                    <span class="loader-eyebrow">PERSONAL PORTFOLIO</span>
+                    <span class="loader-brand-name">DasireddyVenkatesh</span>
                 </div>
+                <span class="loader-live-dot" aria-label="Starting"></span>
+            </div>
 
-                <div class="loader-message">
-                    <span class="loader-kicker">A moment, please</span>
-                    <h1 class="loader-title">Building the experience.</h1>
-                    <p class="loader-subtitle">Thoughtful software, made useful.</p>
-                </div>
+            <div class="loader-message">
+                <span class="loader-kicker">A moment, please</span>
+                <h1 class="loader-title">Building the experience.</h1>
+                <p class="loader-subtitle">Thoughtful software, made useful.</p>
+            </div>
 
-                <div class="loader-progress-group">
-                    <div class="loader-progress" role="progressbar"
-                         aria-label="Portfolio download progress"
-                         aria-valuemin="0" aria-valuemax="100">
-                        <span></span>
-                    </div>
-                    <div class="loader-progress-meta">
-                        <span>Preparing your portfolio</span>
-                        <span class="loader-percentage" aria-hidden="true"></span>
-                    </div>
+            <div class="loader-progress-group">
+                <div class="loader-progress" role="progressbar"
+                     aria-label="Portfolio download progress"
+                     aria-valuemin="0" aria-valuemax="100">
+                    <span></span>
                 </div>
-            </section>
-            <span class="loader-footer">DESIGNED TO MAKE COMPLEXITY FEEL SIMPLE</span>
+                <div class="loader-progress-meta">
+                    <span>Preparing your portfolio</span>
+                    <span class="loader-percentage" aria-hidden="true"></span>
+                </div>
+            </div>
+        </section>
+        <span class="loader-footer">DESIGNED TO MAKE COMPLEXITY FEEL SIMPLE</span>
     </main>
 
     <!-- MudBlazor JavaScript -->
@@ -101,11 +101,12 @@
 
     <!-- Service Worker -->
     <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('service-worker.js', { updateViaCache: 'none' })
-                .then(registration => registration.update())
-                .catch(error => console.error('Service worker update check failed:', error));
-        }
+        navigator.serviceWorker.register(
+            'service-worker.js',
+            {
+                updateViaCache: 'none'
+            }
+        );
     </script>
 
 </body>
