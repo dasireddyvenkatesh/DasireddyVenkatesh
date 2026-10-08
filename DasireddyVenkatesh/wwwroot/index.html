@@ -8,12 +8,11 @@
     <title>DasireddyVenkatesh</title>
 
     <base href="/" />
+
     <link href="DasireddyVenkatesh.styles.css" rel="stylesheet" />
+
     <!-- Application CSS -->
     <link rel="stylesheet" href="css/app.css" />
-
-    <!-- PWA -->
-    <!--<link rel="manifest" href="manifest.webmanifest" />-->
 
     <!-- Favicon -->
     <link rel="icon"
@@ -43,10 +42,16 @@
 
         window.finishPortfolioStartup = () => {
             const startupScreen = document.getElementById('startup-screen');
-            if (!startupScreen) return;
+
+            if (!startupScreen) {
+                return;
+            }
 
             startupScreen.classList.add('is-exiting');
-            window.setTimeout(() => startupScreen.remove(), 220);
+
+            window.setTimeout(() => {
+                startupScreen.remove();
+            }, 220);
         };
     </script>
 
@@ -58,75 +63,198 @@
     <!-- Blazor Application -->
     <div id="app"></div>
 
-    <main id="startup-screen" class="modern-loader" aria-label="Portfolio loading">
-        <div class="loader-atmosphere" aria-hidden="true"></div>
-        <section class="loader-card" aria-live="polite">
+    <!-- Startup Screen -->
+    <main id="startup-screen"
+          class="modern-loader"
+          aria-label="Portfolio loading">
+
+        <div class="loader-atmosphere"
+             aria-hidden="true"></div>
+
+        <section class="loader-card"
+                 aria-live="polite">
+
             <div class="loader-brand-row">
+
                 <img src="D_icon_192x192.png"
                      class="loader-logo"
                      alt="" />
+
                 <div class="loader-brand-copy">
-                    <span class="loader-eyebrow">PERSONAL PORTFOLIO</span>
-                    <span class="loader-brand-name">DasireddyVenkatesh</span>
+                    <span class="loader-eyebrow">
+                        PERSONAL PORTFOLIO
+                    </span>
+
+                    <span class="loader-brand-name">
+                        DasireddyVenkatesh
+                    </span>
                 </div>
-                <span class="loader-live-dot" aria-label="Starting"></span>
+
+                <span class="loader-live-dot"
+                      aria-label="Starting"></span>
+
             </div>
 
             <div class="loader-message">
-                <span class="loader-kicker">A moment, please</span>
-                <h1 class="loader-title">Building the experience.</h1>
-                <p class="loader-subtitle">Thoughtful software, made useful.</p>
+
+                <span class="loader-kicker">
+                    A moment, please
+                </span>
+
+                <h1 class="loader-title">
+                    Building the experience.
+                </h1>
+
+                <p class="loader-subtitle">
+                    Thoughtful software, made useful.
+                </p>
+
             </div>
 
             <div class="loader-progress-group">
-                <div class="loader-progress" role="progressbar"
+
+                <div class="loader-progress"
+                     role="progressbar"
                      aria-label="Portfolio download progress"
-                     aria-valuemin="0" aria-valuemax="100">
+                     aria-valuemin="0"
+                     aria-valuemax="100">
+
                     <span></span>
+
                 </div>
+
                 <div class="loader-progress-meta">
-                    <span>Preparing your portfolio</span>
-                    <span class="loader-percentage" aria-hidden="true"></span>
+
+                    <span>
+                        Preparing your portfolio
+                    </span>
+
+                    <span class="loader-percentage"
+                          aria-hidden="true">
+                    </span>
+
                 </div>
+
             </div>
+
         </section>
-        <span class="loader-footer">DESIGNED TO MAKE COMPLEXITY FEEL SIMPLE</span>
+
+        <span class="loader-footer">
+            DESIGNED TO MAKE COMPLEXITY FEEL SIMPLE
+        </span>
+
     </main>
 
     <!-- MudBlazor JavaScript -->
     <script src="_content/MudBlazor/MudBlazor.min.js"></script>
-
-    <!-- Blazor WebAssembly -->
     <script src="_framework/blazor.webassembly#[.{fingerprint}].js"></script>
 
-    <!-- Service Worker -->
-    <!--<script>
-        navigator.serviceWorker.register(
-            'service-worker.js',
-            {
-                updateViaCache: 'none'
-            }
-        );
-    </script>-->
+    <!--
+        TEMPORARY SERVICE-WORKER MIGRATION
 
+        This block is required ONLY for the migration deployment.
+
+        It:
+        1. Finds any existing service workers for this origin.
+        2. Unregisters them.
+        3. Deletes old Cache Storage entries.
+        4. Reloads the page once if an old service worker was found.
+
+        After the migration period, REMOVE this entire block.
+    -->
     <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.getRegistrations()
-                .then(registrations => {
-                    for (const registration of registrations) {
-                        registration.unregister();
-                    }
-                });
+        (async function removeLegacyServiceWorker() {
 
-            if ('caches' in window) {
-                caches.keys()
-                    .then(cacheNames => {
-                        for (const cacheName of cacheNames) {
-                            caches.delete(cacheName);
-                        }
-                    });
+            if (!('serviceWorker' in navigator)) {
+                return;
             }
-        }
+
+            try {
+
+                const registrations =
+                    await navigator.serviceWorker.getRegistrations();
+
+                const hadServiceWorker =
+                    registrations.length > 0;
+
+                if (hadServiceWorker) {
+
+                    for (const registration of registrations) {
+                        try {
+                            await registration.unregister();
+                        }
+                        catch (error) {
+                            console.warn(
+                                'Unable to unregister service worker:',
+                                error
+                            );
+                        }
+                    }
+                }
+
+                /*
+                 * Remove caches created by the old PWA.
+                 */
+                if ('caches' in window) {
+
+                    try {
+
+                        const cacheNames =
+                            await caches.keys();
+
+                        await Promise.all(
+                            cacheNames.map(cacheName =>
+                                caches.delete(cacheName)
+                            )
+                        );
+
+                    }
+                    catch (error) {
+
+                        console.warn(
+                            'Unable to clear legacy caches:',
+                            error
+                        );
+
+                    }
+                }
+
+                /*
+                 * Reload only when an old service worker
+                 * was actually detected.
+                 *
+                 * sessionStorage prevents a reload loop.
+                 */
+                if (hadServiceWorker) {
+
+                    const reloadKey =
+                        'legacy-service-worker-cleaned';
+
+                    const alreadyReloaded =
+                        sessionStorage.getItem(reloadKey);
+
+                    if (!alreadyReloaded) {
+
+                        sessionStorage.setItem(
+                            reloadKey,
+                            'true'
+                        );
+
+                        window.location.reload();
+                    }
+                }
+
+            }
+            catch (error) {
+
+                console.warn(
+                    'Legacy service-worker cleanup failed:',
+                    error
+                );
+
+            }
+
+        })();
     </script>
 
 </body>
